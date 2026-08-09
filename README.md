@@ -17,7 +17,32 @@ pour les notes spécifiques à la version d'Expo utilisée.
 | IA recommandations | API Anthropic (Claude), via une Edge Function Supabase |
 | Abonnements | RevenueCat (non connecté dans ce scaffold, voir plus bas) |
 
-## Démarrage
+## Tester rapidement sans backend (mode démo)
+
+Pour voir l'app tourner sur votre téléphone en quelques minutes, sans créer de
+projet Supabase :
+
+```bash
+npm install
+cp .env.example .env
+```
+
+Puis décommentez `EXPO_PUBLIC_PREVIEW=1` dans `.env`, et lancez :
+
+```bash
+npx expo start
+```
+
+Scannez le QR code affiché avec l'app **Expo Go** (iOS/Android, gratuite) — le
+téléphone et l'ordinateur doivent être sur le même réseau Wi-Fi. L'app se lance
+avec un compte et des données factices déjà chargés (véhicules, modifications,
+entretien, communauté) : aucune connexion n'est nécessaire, rien n'est
+sauvegardé. Pratique pour explorer l'app ou faire des captures d'écran.
+
+Pour passer au vrai backend ensuite, il suffit de retirer/commenter
+`EXPO_PUBLIC_PREVIEW` et de suivre la section suivante.
+
+## Démarrage (avec un vrai backend Supabase)
 
 ### 1. Dépendances
 
