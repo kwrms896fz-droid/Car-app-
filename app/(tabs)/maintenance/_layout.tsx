@@ -12,7 +12,7 @@ export default function MaintenanceLayout() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Entretien" }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="new" options={{ title: "Nouvel entretien", presentation: "modal" }} />
     </Stack>
   );
