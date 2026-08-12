@@ -101,7 +101,11 @@ supabase/
 
 - Inscription / connexion email + mot de passe, profil auto-créé (trigger SQL).
 - Garage : création de véhicule (voiture/moto), photo de couverture, journal de
-  modifications avec catégories, prix et calcul automatique du budget total.
+  modifications avec 3 catégories (esthétique / performance / confort), prix et
+  calcul automatique du budget total.
+- Vue 360° : séquence de photos "avant préparation" et "après préparation"
+  (une fois marquée comme terminée), visualiseur en glisser-tourner, résumé
+  (modèle, année, puissance) et partage. Voir « Limites actuelles » ci-dessous.
 - Recommandations IA (formulaire objectif + budget → appel Edge Function → Claude).
 - Page publique partageable par véhicule + bouton de partage natif.
 - Communauté : fil d'abonnements, découverte de véhicules publics, likes, follow,
@@ -109,6 +113,17 @@ supabase/
 - Entretien : ajout d'échéances (vidange, pneus, contrôle technique, freins...),
   indicateur en retard / bientôt / à jour, marquage comme fait.
 - Profil + écran d'abonnement (maquette, sans paiement réel branché).
+
+## Limites actuelles de la vue 360°
+
+- La "rotation" est une séquence de photos que vous prenez vous-même autour du
+  véhicule (l'app ne pilote pas l'appareil photo automatiquement) : ouvrez
+  l'écran, sélectionnez plusieurs photos dans l'ordre de la rotation, glissez
+  pour prévisualiser.
+- Le partage envoie l'image de la frame actuelle + un texte récapitulatif via
+  le partage natif du téléphone — pas de génération vidéo automatique de la
+  rotation (nécessiterait un rendu vidéo côté serveur, hors scope de ce
+  scaffold).
 
 ## Ce qui reste à faire pour une V1 complète
 
