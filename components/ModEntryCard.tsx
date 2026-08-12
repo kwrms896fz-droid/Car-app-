@@ -1,21 +1,26 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
+import { GlassCard } from "@/components/GlassCard";
 import type { ModEntry } from "@/lib/database.types";
-import { categoryLabels, colors, radius, spacing } from "@/lib/theme";
+import { categoryColors, categoryIcons, categoryLabels, colors, radius, spacing } from "@/lib/theme";
 
 export function ModEntryCard({ entry }: { entry: ModEntry }) {
+  const accent = categoryColors[entry.category] ?? colors.primary;
+
   return (
-    <View style={styles.card}>
+    <GlassCard radiusSize={radius.md}>
       {entry.photos.length > 0 ? (
         <Image source={{ uri: entry.photos[0] }} style={styles.photo} contentFit="cover" />
       ) : null}
       <View style={styles.body}>
         <View style={styles.rowBetween}>
-          <Text style={styles.category}>{categoryLabels[entry.category] ?? entry.category}</Text>
-          <Text style={styles.date}>
-            {new Date(entry.entry_date).toLocaleDateString("fr-FR")}
-          </Text>
+          <View style={[styles.categoryPill, { backgroundColor: `${accent}22`, borderColor: `${accent}55` }]}>
+            <Ionicons name={(categoryIcons[entry.category] as any) ?? "pricetag"} size={12} color={accent} />
+            <Text style={[styles.category, { color: accent }]}>{categoryLabels[entry.category] ?? entry.category}</Text>
+          </View>
+          <Text style={styles.date}>{new Date(entry.entry_date).toLocaleDateString("fr-FR")}</Text>
         </View>
         <Text style={styles.title}>{entry.title}</Text>
         {entry.description ? <Text style={styles.description}>{entry.description}</Text> : null}
@@ -23,35 +28,38 @@ export function ModEntryCard({ entry }: { entry: ModEntry }) {
           <Text style={styles.price}>{entry.price.toLocaleString("fr-FR")} €</Text>
         ) : null}
       </View>
-    </View>
+    </GlassCard>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: "hidden",
-  },
   photo: {
     width: "100%",
     height: 140,
   },
   body: {
     padding: spacing.md,
-    gap: 4,
+    gap: 6,
   },
   rowBetween: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+  categoryPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    borderWidth: 1,
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
   },
   category: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: 11,
+    fontWeight: "800",
     textTransform: "uppercase",
+    letterSpacing: 0.3,
   },
   date: {
     color: colors.textMuted,
@@ -60,7 +68,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.text,
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "800",
   },
   description: {
     color: colors.textMuted,
@@ -69,7 +77,7 @@ const styles = StyleSheet.create({
   price: {
     color: colors.text,
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "700",
     marginTop: 2,
   },
 });

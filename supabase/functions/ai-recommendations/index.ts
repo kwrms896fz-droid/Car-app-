@@ -20,7 +20,7 @@ interface RequestBody {
 
 interface Recommendation {
   title: string;
-  category: "esthetique" | "mecanique" | "performance" | "confort";
+  category: "esthetique" | "performance" | "confort";
   estimated_price: number;
   difficulty: "facile" | "moyen" | "difficile";
   explanation: string;
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
             `Objectif du propriétaire : ${objective}.\n` +
             `Budget approximatif : ${budget ? `${budget} €` : "non précisé"}.\n\n` +
             "Propose 3 à 5 pistes de modifications adaptées, réalistes pour ce budget, " +
-            "avec pour chacune : un titre court, une catégorie (esthetique | mecanique | performance | confort), " +
+            "avec pour chacune : un titre court, une catégorie (esthetique | performance | confort), " +
             "un prix estimé en euros, une difficulté (facile | moyen | difficile), " +
             "et une explication simple de l'intérêt de cette modification.",
         },
@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
                     title: { type: "string" },
                     category: {
                       type: "string",
-                      enum: ["esthetique", "mecanique", "performance", "confort"],
+                      enum: ["esthetique", "performance", "confort"],
                     },
                     estimated_price: { type: "number" },
                     difficulty: { type: "string", enum: ["facile", "moyen", "difficile"] },

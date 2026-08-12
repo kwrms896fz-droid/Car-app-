@@ -1,5 +1,5 @@
 export type VehicleType = "voiture" | "moto";
-export type ModCategory = "esthetique" | "mecanique" | "performance" | "confort";
+export type ModCategory = "esthetique" | "performance" | "confort";
 export type MaintenanceKind = "vidange" | "pneus" | "controle_technique" | "freins" | "autre";
 export type NotificationType = "follow" | "new_mod_entry" | "like" | "comment";
 export type SubscriptionPlan = "monthly" | "yearly";
@@ -24,8 +24,14 @@ export type Vehicle = {
   cover_photo_url: string | null;
   is_public: boolean;
   hide_budget: boolean;
+  horsepower: number | null;
+  is_completed: boolean;
+  photos_360_before: string[];
+  photos_360_after: string[];
   created_at: string;
 };
+
+export type Vehicle360State = "before" | "after";
 
 export type ModEntry = {
   id: string;
@@ -112,7 +118,22 @@ export type Database = {
       vehicles: TableDef<
         Vehicle,
         Pick<Vehicle, "owner_id" | "type_vehicule" | "brand" | "model"> &
-          Partial<Pick<Vehicle, "year" | "cover_photo_url" | "is_public" | "hide_budget">>
+          Partial<Pick<Vehicle, "year" | "cover_photo_url" | "is_public" | "hide_budget" | "horsepower">>,
+        Partial<
+          Pick<
+            Vehicle,
+            | "brand"
+            | "model"
+            | "year"
+            | "cover_photo_url"
+            | "is_public"
+            | "hide_budget"
+            | "horsepower"
+            | "is_completed"
+            | "photos_360_before"
+            | "photos_360_after"
+          >
+        >
       >;
       mod_entries: TableDef<
         ModEntry,

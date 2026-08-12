@@ -1,19 +1,18 @@
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Button } from "@/components/Button";
+import { CategoryPicker } from "@/components/CategoryPicker";
 import { Screen } from "@/components/Screen";
 import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
 import type { ImagePickerAsset } from "expo-image-picker";
 import { pickImage, uploadVehiclePhoto } from "@/lib/storage";
-import { categoryLabels, colors, radius, spacing } from "@/lib/theme";
+import { colors, radius, spacing } from "@/lib/theme";
 import { createModEntry } from "@/lib/vehicles";
 import type { ModCategory } from "@/lib/database.types";
-
-const categories = Object.keys(categoryLabels) as ModCategory[];
 
 export default function AddEntryScreen() {
   const { id: vehicleId } = useLocalSearchParams<{ id: string }>();
@@ -58,19 +57,7 @@ export default function AddEntryScreen() {
 
   return (
     <Screen scroll>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categories}>
-        {categories.map((c) => (
-          <Pressable
-            key={c}
-            onPress={() => setCategory(c)}
-            style={[styles.categoryChip, category === c && styles.categoryChipActive]}
-          >
-            <Text style={[styles.categoryText, category === c && styles.categoryTextActive]}>
-              {categoryLabels[c]}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <CategoryPicker value={category} onChange={setCategory} />
 
       <Pressable onPress={onPickPhoto} style={styles.photoPicker}>
         {photo ? (
@@ -108,30 +95,6 @@ export default function AddEntryScreen() {
 }
 
 const styles = StyleSheet.create({
-  categories: {
-    gap: spacing.sm,
-    paddingBottom: spacing.xs,
-  },
-  categoryChip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: colors.surfaceAlt,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  categoryChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  categoryText: {
-    color: colors.textMuted,
-    fontWeight: "600",
-    fontSize: 13,
-  },
-  categoryTextActive: {
-    color: "#151515",
-  },
   photoPicker: {
     borderRadius: radius.lg,
     overflow: "hidden",

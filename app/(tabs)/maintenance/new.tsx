@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   chipTextActive: {
-    color: "#151515",
+    color: colors.onNeon,
   },
   error: {
     color: colors.danger,

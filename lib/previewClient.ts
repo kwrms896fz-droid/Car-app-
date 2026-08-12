@@ -8,6 +8,13 @@ const daysAgo = (n: number) => new Date(now - n * 86400000).toISOString();
 const daysFromNow = (n: number) => new Date(now + n * 86400000).toISOString().slice(0, 10);
 const dateDaysAgo = (n: number) => new Date(now - n * 86400000).toISOString().slice(0, 10);
 
+// Séquence factice de N images pour simuler une vue 360° dans le mode démo.
+function rotationFrames(label: string, count: number, bg: string, fg: string): string[] {
+  return Array.from({ length: count }, (_, i) =>
+    `https://placehold.co/640x480/${bg}/${fg}?text=${encodeURIComponent(label)}+${i + 1}%2F${count}`
+  );
+}
+
 const db: Record<string, any[]> = {
   profiles: [
     {
@@ -23,17 +30,77 @@ const db: Record<string, any[]> = {
     { id: "u3", username: "max_tuning", display_name: "Max", avatar_url: null, bio: null, is_premium: true, created_at: daysAgo(100) },
   ],
   vehicles: [
-    { id: "v1", owner_id: "u1", type_vehicule: "voiture", brand: "Peugeot", model: "205 GTI", year: 1990, cover_photo_url: null, is_public: true, hide_budget: false, created_at: daysAgo(300) },
-    { id: "v2", owner_id: "u1", type_vehicule: "moto", brand: "Yamaha", model: "MT-07", year: 2022, cover_photo_url: null, is_public: true, hide_budget: false, created_at: daysAgo(60) },
-    { id: "v3", owner_id: "u2", type_vehicule: "voiture", brand: "Volkswagen", model: "Golf GTI", year: 2015, cover_photo_url: null, is_public: true, hide_budget: false, created_at: daysAgo(90) },
-    { id: "v4", owner_id: "u3", type_vehicule: "moto", brand: "Honda", model: "CB650R", year: 2021, cover_photo_url: null, is_public: true, hide_budget: false, created_at: daysAgo(45) },
+    {
+      id: "v1",
+      owner_id: "u1",
+      type_vehicule: "voiture",
+      brand: "Peugeot",
+      model: "205 GTI",
+      year: 1990,
+      cover_photo_url: null,
+      is_public: true,
+      hide_budget: false,
+      horsepower: 132,
+      is_completed: true,
+      photos_360_before: rotationFrames("Avant", 8, "1a1a2e", "6f6690"),
+      photos_360_after: rotationFrames("Apres", 8, "1a0e2e", "B026FF"),
+      created_at: daysAgo(300),
+    },
+    {
+      id: "v2",
+      owner_id: "u1",
+      type_vehicule: "moto",
+      brand: "Yamaha",
+      model: "MT-07",
+      year: 2022,
+      cover_photo_url: null,
+      is_public: true,
+      hide_budget: false,
+      horsepower: 73,
+      is_completed: false,
+      photos_360_before: rotationFrames("Avant", 6, "0e1a2e", "22E4E4"),
+      photos_360_after: [],
+      created_at: daysAgo(60),
+    },
+    {
+      id: "v3",
+      owner_id: "u2",
+      type_vehicule: "voiture",
+      brand: "Volkswagen",
+      model: "Golf GTI",
+      year: 2015,
+      cover_photo_url: null,
+      is_public: true,
+      hide_budget: false,
+      horsepower: 230,
+      is_completed: false,
+      photos_360_before: [],
+      photos_360_after: [],
+      created_at: daysAgo(90),
+    },
+    {
+      id: "v4",
+      owner_id: "u3",
+      type_vehicule: "moto",
+      brand: "Honda",
+      model: "CB650R",
+      year: 2021,
+      cover_photo_url: null,
+      is_public: true,
+      hide_budget: false,
+      horsepower: 94,
+      is_completed: false,
+      photos_360_before: [],
+      photos_360_after: [],
+      created_at: daysAgo(45),
+    },
   ],
   mod_entries: [
     { id: "e1", vehicle_id: "v1", category: "esthetique", title: "Jantes 18 pouces", description: "Jantes Speedline en remplacement des jantes tôle d'origine.", price: 850, photos: [], entry_date: dateDaysAgo(280), created_at: daysAgo(280) },
     { id: "e2", vehicle_id: "v1", category: "performance", title: "Reprogrammation moteur", description: "Passage de 105 à 130ch chez un spécialiste local.", price: 600, photos: [], entry_date: dateDaysAgo(180), created_at: daysAgo(180) },
     { id: "e3", vehicle_id: "v1", category: "confort", title: "Sièges baquets", description: "Sièges Recaro d'occasion, montage par un garage.", price: 1200, photos: [], entry_date: dateDaysAgo(30), created_at: daysAgo(30) },
     { id: "e4", vehicle_id: "v3", category: "esthetique", title: "Kit carrosserie GTI", description: "Pare-choc, jupes latérales et diffuseur arrière.", price: 950, photos: [], entry_date: dateDaysAgo(10), created_at: daysAgo(10) },
-    { id: "e5", vehicle_id: "v2", category: "mecanique", title: "Ligne d'échappement Akrapovic", description: "Son plus profond, gain de quelques chevaux.", price: 780, photos: [], entry_date: dateDaysAgo(20), created_at: daysAgo(20) },
+    { id: "e5", vehicle_id: "v2", category: "performance", title: "Ligne d'échappement Akrapovic", description: "Son plus profond, gain de quelques chevaux.", price: 780, photos: [], entry_date: dateDaysAgo(20), created_at: daysAgo(20) },
   ],
   maintenance_items: [
     { id: "m1", vehicle_id: "v1", kind: "vidange", label: "Vidange + filtre à huile", due_date: daysFromNow(12), due_mileage: null, last_done_date: null, last_done_mileage: null, completed: false, created_at: daysAgo(100) },
@@ -193,7 +260,7 @@ const fakeSession = {
 const mockRecommendations = [
   {
     title: "Amortisseurs sport réglables",
-    category: "mecanique",
+    category: "performance",
     estimated_price: 650,
     difficulty: "moyen",
     explanation: "Améliore la tenue de route et abaisse légèrement le centre de gravité pour un comportement plus sportif.",

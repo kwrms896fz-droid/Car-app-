@@ -59,7 +59,7 @@ export default function GarageScreen() {
           }
           style={styles.addButton}
         >
-          <Ionicons name="add" size={26} color="#151515" />
+          <Ionicons name="add" size={26} color={colors.onNeon} />
         </Pressable>
       </View>
 

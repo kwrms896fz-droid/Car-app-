@@ -1,6 +1,7 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, ViewStyle } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, glow, gradients, radius, spacing } from "@/lib/theme";
 
 interface ButtonProps {
   label: string;
@@ -19,29 +20,52 @@ export function Button({ label, onPress, variant = "primary", loading, disabled,
       onPress={onPress}
       disabled={isDisabled}
       style={({ pressed }) => [
-        styles.base,
-        variant === "primary" && styles.primary,
-        variant === "secondary" && styles.secondary,
-        variant === "ghost" && styles.ghost,
+        variant === "primary" && !isDisabled && glow(colors.primary, 0.45, 14),
         isDisabled && styles.disabled,
         pressed && !isDisabled && styles.pressed,
         style,
       ]}
     >
-      {loading ? (
-        <ActivityIndicator color={variant === "primary" ? "#000" : colors.text} />
-      ) : (
-        <Text
-          style={[
-            styles.label,
-            variant === "primary" && styles.labelPrimary,
-            variant === "ghost" && styles.labelGhost,
-          ]}
+      {variant === "primary" ? (
+        <LinearGradient
+          colors={gradients.primaryButton}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.base}
         >
-          {label}
-        </Text>
+          <ButtonContent label={label} loading={loading} variant={variant} />
+        </LinearGradient>
+      ) : (
+        <View style={[styles.base, variant === "secondary" && styles.secondary, variant === "ghost" && styles.ghost]}>
+          <ButtonContent label={label} loading={loading} variant={variant} />
+        </View>
       )}
     </Pressable>
+  );
+}
+
+function ButtonContent({
+  label,
+  loading,
+  variant,
+}: {
+  label: string;
+  loading?: boolean;
+  variant: "primary" | "secondary" | "ghost";
+}) {
+  if (loading) {
+    return <ActivityIndicator color={variant === "primary" ? colors.onNeon : colors.text} />;
+  }
+  return (
+    <Text
+      style={[
+        styles.label,
+        variant === "primary" && styles.labelPrimary,
+        variant === "ghost" && styles.labelGhost,
+      ]}
+    >
+      {label}
+    </Text>
   );
 }
 
@@ -53,30 +77,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  primary: {
-    backgroundColor: colors.primary,
-  },
   secondary: {
     backgroundColor: colors.surfaceAlt,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
   },
   ghost: {
     backgroundColor: "transparent",
   },
   disabled: {
-    opacity: 0.5,
+    opacity: 0.4,
   },
   pressed: {
     opacity: 0.85,
+    transform: [{ scale: 0.99 }],
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
     color: colors.text,
   },
   labelPrimary: {
-    color: "#151515",
+    color: colors.onNeon,
   },
   labelGhost: {
     color: colors.primary,

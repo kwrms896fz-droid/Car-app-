@@ -2,8 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { GlassCard } from "@/components/GlassCard";
 import type { Vehicle } from "@/lib/database.types";
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, spacing } from "@/lib/theme";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -13,42 +14,37 @@ interface VehicleCardProps {
 
 export function VehicleCard({ vehicle, budgetTotal, onPress }: VehicleCardProps) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
-      {vehicle.cover_photo_url ? (
-        <Image source={{ uri: vehicle.cover_photo_url }} style={styles.cover} contentFit="cover" />
-      ) : (
-        <View style={[styles.cover, styles.coverPlaceholder]}>
-          <Ionicons
-            name={vehicle.type_vehicule === "moto" ? "bicycle" : "car-sport"}
-            size={36}
-            color={colors.textMuted}
-          />
+    <Pressable onPress={onPress} style={({ pressed }) => [pressed && styles.pressed]}>
+      <GlassCard>
+        {vehicle.cover_photo_url ? (
+          <Image source={{ uri: vehicle.cover_photo_url }} style={styles.cover} contentFit="cover" />
+        ) : (
+          <View style={[styles.cover, styles.coverPlaceholder]}>
+            <Ionicons
+              name={vehicle.type_vehicule === "moto" ? "bicycle" : "car-sport"}
+              size={36}
+              color={colors.textMuted}
+            />
+          </View>
+        )}
+        <View style={styles.info}>
+          <Text style={styles.title}>
+            {vehicle.brand} {vehicle.model}
+          </Text>
+          <Text style={styles.subtitle}>
+            {vehicle.type_vehicule === "moto" ? "Moto" : "Voiture"}
+            {vehicle.year ? ` · ${vehicle.year}` : ""}
+          </Text>
+          {budgetTotal !== undefined && !vehicle.hide_budget ? (
+            <Text style={styles.budget}>{budgetTotal.toLocaleString("fr-FR")} € investis</Text>
+          ) : null}
         </View>
-      )}
-      <View style={styles.info}>
-        <Text style={styles.title}>
-          {vehicle.brand} {vehicle.model}
-        </Text>
-        <Text style={styles.subtitle}>
-          {vehicle.type_vehicule === "moto" ? "Moto" : "Voiture"}
-          {vehicle.year ? ` · ${vehicle.year}` : ""}
-        </Text>
-        {budgetTotal !== undefined && !vehicle.hide_budget ? (
-          <Text style={styles.budget}>{budgetTotal.toLocaleString("fr-FR")} € investis</Text>
-        ) : null}
-      </View>
+      </GlassCard>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: "hidden",
-  },
   pressed: {
     opacity: 0.85,
   },
@@ -57,7 +53,7 @@ const styles = StyleSheet.create({
     height: 160,
   },
   coverPlaceholder: {
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: "rgba(255,255,255,0.03)",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "800",
     color: colors.text,
   },
   subtitle: {
@@ -77,7 +73,7 @@ const styles = StyleSheet.create({
   budget: {
     marginTop: spacing.xs,
     fontSize: 14,
-    fontWeight: "600",
-    color: colors.primary,
+    fontWeight: "700",
+    color: colors.cyan,
   },
 });

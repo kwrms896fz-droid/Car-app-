@@ -44,7 +44,7 @@ export default function MaintenanceScreen() {
           onPress={() => (vehicles.length > 0 ? router.push("/(tabs)/maintenance/new") : router.push("/(tabs)/garage/new"))}
           style={styles.addButton}
         >
-          <Ionicons name="add" size={26} color="#151515" />
+          <Ionicons name="add" size={26} color={colors.onNeon} />
         </Pressable>
       </View>
 

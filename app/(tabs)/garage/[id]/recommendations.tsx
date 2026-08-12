@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button } from "@/components/Button";
 import { Screen } from "@/components/Screen";
 import { TextField } from "@/components/TextField";
-import { categoryLabels, colors, radius, spacing } from "@/lib/theme";
+import { categoryColors, categoryLabels, colors, radius, spacing } from "@/lib/theme";
 import { fetchRecommendations, type Recommendation } from "@/lib/recommendations";
 
 const difficultyColor: Record<Recommendation["difficulty"], string> = {
@@ -69,7 +69,9 @@ export default function RecommendationsScreen() {
           {results.map((rec, i) => (
             <View key={i} style={styles.card}>
               <View style={styles.rowBetween}>
-                <Text style={styles.category}>{categoryLabels[rec.category] ?? rec.category}</Text>
+                <Text style={[styles.category, { color: categoryColors[rec.category] ?? colors.primary }]}>
+                  {categoryLabels[rec.category] ?? rec.category}
+                </Text>
                 <Text style={[styles.difficulty, { color: difficultyColor[rec.difficulty] }]}>
                   {rec.difficulty}
                 </Text>

@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { GlassCard } from "@/components/GlassCard";
 import type { MaintenanceItem, Vehicle } from "@/lib/database.types";
 import { maintenanceUrgency } from "@/lib/maintenance";
 import { colors, maintenanceLabels, radius, spacing } from "@/lib/theme";
@@ -29,10 +30,10 @@ export function MaintenanceItemCard({ item, vehicle, onMarkDone }: MaintenanceIt
   const urgency = maintenanceUrgency(item);
 
   return (
-    <View style={styles.card}>
+    <GlassCard radiusSize={radius.md} style={styles.card}>
       <View style={styles.info}>
         <View style={styles.row}>
-          <Text style={[styles.badge, { color: urgencyColor[urgency], borderColor: urgencyColor[urgency] }]}>
+          <Text style={[styles.badge, { color: urgencyColor[urgency], borderColor: `${urgencyColor[urgency]}66` }]}>
             {urgencyLabel[urgency]}
           </Text>
           <Text style={styles.kind}>{maintenanceLabels[item.kind] ?? item.kind}</Text>
@@ -53,7 +54,7 @@ export function MaintenanceItemCard({ item, vehicle, onMarkDone }: MaintenanceIt
       <Pressable onPress={onMarkDone} style={styles.doneButton} hitSlop={8}>
         <Ionicons name="checkmark-circle-outline" size={26} color={colors.success} />
       </Pressable>
-    </View>
+    </GlassCard>
   );
 }
 
@@ -61,10 +62,6 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
     padding: spacing.md,
     gap: spacing.sm,
   },

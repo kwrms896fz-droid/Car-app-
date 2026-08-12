@@ -27,10 +27,26 @@ export async function createVehicle(input: {
   model: string;
   year?: number;
   cover_photo_url?: string;
+  horsepower?: number;
 }): Promise<Vehicle> {
   const { data, error } = await supabase.from("vehicles").insert(input).select().single();
   if (error) throw error;
   return data;
+}
+
+export async function updateVehicle360Photos(
+  vehicleId: string,
+  state: "before" | "after",
+  photos: string[]
+): Promise<void> {
+  const update = state === "before" ? { photos_360_before: photos } : { photos_360_after: photos };
+  const { error } = await supabase.from("vehicles").update(update).eq("id", vehicleId);
+  if (error) throw error;
+}
+
+export async function markPreparationCompleted(vehicleId: string): Promise<void> {
+  const { error } = await supabase.from("vehicles").update({ is_completed: true }).eq("id", vehicleId);
+  if (error) throw error;
 }
 
 export async function fetchModEntries(vehicleId: string): Promise<ModEntry[]> {

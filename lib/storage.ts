@@ -17,6 +17,26 @@ export async function pickImage(): Promise<ImagePicker.ImagePickerAsset | null> 
   return result.assets[0];
 }
 
+// Sélection de plusieurs photos d'un coup, utilisée pour composer une
+// séquence de rotation (vue 360°). L'ordre de sélection donne l'ordre des
+// images dans le visualiseur.
+export async function pickMultipleImages(): Promise<ImagePicker.ImagePickerAsset[]> {
+  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (!permission.granted) return [];
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ["images"],
+    quality: 0.6,
+    base64: true,
+    allowsMultipleSelection: true,
+    orderedSelection: true,
+    selectionLimit: 24,
+  });
+
+  if (result.canceled) return [];
+  return result.assets;
+}
+
 export async function uploadVehiclePhoto(
   userId: string,
   asset: ImagePicker.ImagePickerAsset
@@ -38,4 +58,15 @@ export async function uploadVehiclePhoto(
 
   const { data } = supabase.storage.from("vehicle-photos").getPublicUrl(path);
   return data.publicUrl;
+}
+
+export async function uploadVehiclePhotos(
+  userId: string,
+  assets: ImagePicker.ImagePickerAsset[]
+): Promise<string[]> {
+  const urls: string[] = [];
+  for (const asset of assets) {
+    urls.push(await uploadVehiclePhoto(userId, asset));
+  }
+  return urls;
 }

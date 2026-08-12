@@ -4,6 +4,7 @@ import { router, useFocusEffect, useLocalSearchParams, useNavigation } from "exp
 import { useCallback, useLayoutEffect, useState } from "react";
 import { FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
 
+import { GlassCard } from "@/components/GlassCard";
 import { Screen } from "@/components/Screen";
 import { ModEntryCard } from "@/components/ModEntryCard";
 import { useAuth } from "@/context/AuthContext";
@@ -74,26 +75,34 @@ export default function VehicleDetailScreen() {
 
       <View style={styles.content}>
         {!vehicle?.hide_budget ? (
-          <View style={styles.budgetCard}>
+          <GlassCard radiusSize={radius.md} style={styles.budgetCard}>
             <Text style={styles.budgetLabel}>Budget total investi</Text>
             <Text style={styles.budgetValue}>{budgetTotal.toLocaleString("fr-FR")} €</Text>
-          </View>
+          </GlassCard>
         ) : null}
 
         <View style={styles.actionsRow}>
           {isOwner ? (
             <ActionButton
               icon="add-circle"
+              accent={colors.pink}
               label="Ajouter une modif"
               onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/add-entry`)}
             />
           ) : null}
           <ActionButton
             icon="sparkles"
+            accent={colors.primary}
             label="Recommandations IA"
             onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/recommendations`)}
           />
-          <ActionButton icon="share-social" label="Partager" onPress={onShare} />
+          <ActionButton
+            icon="sync"
+            accent={colors.cyan}
+            label="Vue 360°"
+            onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/360`)}
+          />
+          <ActionButton icon="share-social" accent={colors.text} label="Partager" onPress={onShare} />
         </View>
 
         <Text style={styles.sectionTitle}>Historique des modifications</Text>
@@ -120,15 +129,17 @@ export default function VehicleDetailScreen() {
 function ActionButton({
   icon,
   label,
+  accent = colors.primary,
   onPress,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
+  accent?: string;
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={styles.actionButton}>
-      <Ionicons name={icon} size={20} color={colors.primary} />
+    <Pressable onPress={onPress} style={[styles.actionButton, { borderColor: `${accent}40` }]}>
+      <Ionicons name={icon} size={20} color={accent} />
       <Text style={styles.actionLabel}>{label}</Text>
     </Pressable>
   );
@@ -149,10 +160,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   budgetCard: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
     padding: spacing.md,
   },
   budgetLabel: {
@@ -160,29 +167,30 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   budgetValue: {
-    color: colors.text,
+    color: colors.cyan,
     fontSize: 28,
     fontWeight: "800",
     marginTop: 2,
   },
   actionsRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
   },
   actionButton: {
-    flex: 1,
+    flexBasis: "47%",
+    flexGrow: 1,
     alignItems: "center",
     gap: 4,
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: "rgba(255,255,255,0.05)",
     borderRadius: radius.md,
-    paddingVertical: spacing.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
+    paddingVertical: spacing.md,
+    borderWidth: 1.5,
   },
   actionLabel: {
     color: colors.text,
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "700",
     textAlign: "center",
   },
   sectionTitle: {

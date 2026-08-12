@@ -20,6 +20,7 @@ export default function GarageLayout() {
         name="[id]/recommendations"
         options={{ title: "Recommandations IA", presentation: "modal" }}
       />
+      <Stack.Screen name="[id]/360" options={{ title: "Vue 360°" }} />
     </Stack>
   );
 }

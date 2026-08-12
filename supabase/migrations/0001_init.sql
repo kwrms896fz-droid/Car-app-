@@ -62,6 +62,10 @@ create table public.vehicles (
   cover_photo_url text,
   is_public boolean not null default true,
   hide_budget boolean not null default false,
+  horsepower integer check (horsepower is null or horsepower between 0 and 3000),
+  is_completed boolean not null default false,
+  photos_360_before text[] not null default '{}',
+  photos_360_after text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 
@@ -84,7 +88,7 @@ create policy "Le propriétaire gère ses véhicules"
 create table public.mod_entries (
   id uuid primary key default gen_random_uuid(),
   vehicle_id uuid not null references public.vehicles (id) on delete cascade,
-  category text not null check (category in ('esthetique', 'mecanique', 'performance', 'confort')),
+  category text not null check (category in ('esthetique', 'performance', 'confort')),
   title text not null,
   description text,
   price numeric(10, 2) check (price >= 0),

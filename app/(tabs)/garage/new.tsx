@@ -10,7 +10,7 @@ import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
 import type { ImagePickerAsset } from "expo-image-picker";
 import { pickImage, uploadVehiclePhoto } from "@/lib/storage";
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, glow, radius, spacing } from "@/lib/theme";
 import { createVehicle } from "@/lib/vehicles";
 import type { VehicleType } from "@/lib/database.types";
 
@@ -20,6 +20,7 @@ export default function NewVehicleScreen() {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
+  const [horsepower, setHorsepower] = useState("");
   const [photo, setPhoto] = useState<ImagePickerAsset | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +45,7 @@ export default function NewVehicleScreen() {
         brand: brand.trim(),
         model: model.trim(),
         year: year ? Number(year) : undefined,
+        horsepower: horsepower ? Number(horsepower) : undefined,
         cover_photo_url,
       });
       router.replace(`/(tabs)/garage/${vehicle.id}`);
@@ -61,12 +63,12 @@ export default function NewVehicleScreen() {
           <Pressable
             key={t}
             onPress={() => setType(t)}
-            style={[styles.typeOption, type === t && styles.typeOptionActive]}
+            style={[styles.typeOption, type === t && [styles.typeOptionActive, glow(colors.primary, 0.4, 10)]]}
           >
             <Ionicons
               name={t === "moto" ? "bicycle" : "car-sport"}
               size={20}
-              color={type === t ? "#151515" : colors.textMuted}
+              color={type === t ? colors.onNeon : colors.textMuted}
             />
             <Text style={[styles.typeLabel, type === t && styles.typeLabelActive]}>
               {t === "moto" ? "Moto" : "Voiture"}
@@ -94,6 +96,13 @@ export default function NewVehicleScreen() {
         keyboardType="number-pad"
         value={year}
         onChangeText={setYear}
+      />
+      <TextField
+        label="Puissance (ch)"
+        placeholder="Ex. 130"
+        keyboardType="number-pad"
+        value={horsepower}
+        onChangeText={setHorsepower}
       />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -129,7 +138,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   typeLabelActive: {
-    color: "#151515",
+    color: colors.onNeon,
   },
   photoPicker: {
     borderRadius: radius.lg,

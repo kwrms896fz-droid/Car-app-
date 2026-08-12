@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   tabLabelActive: {
-    color: "#151515",
+    color: colors.onNeon,
   },
   list: {
     gap: spacing.md,
