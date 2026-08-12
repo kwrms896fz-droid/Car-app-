@@ -15,6 +15,12 @@ function rotationFrames(label: string, count: number, bg: string, fg: string): s
   );
 }
 
+// Photo "stock" stable (service Picsum, aucune clé requise) utilisée pour
+// peupler le mode démo avec de vraies images plutôt que des cartes vides.
+function stockPhoto(seed: string, width = 800, height = 600): string {
+  return `https://picsum.photos/seed/${seed}/${width}/${height}`;
+}
+
 const db: Record<string, any[]> = {
   profiles: [
     {
@@ -37,7 +43,7 @@ const db: Record<string, any[]> = {
       brand: "Peugeot",
       model: "205 GTI",
       year: 1990,
-      cover_photo_url: null,
+      cover_photo_url: stockPhoto("peugeot-205-gti"),
       is_public: true,
       hide_budget: false,
       horsepower: 132,
@@ -53,7 +59,7 @@ const db: Record<string, any[]> = {
       brand: "Yamaha",
       model: "MT-07",
       year: 2022,
-      cover_photo_url: null,
+      cover_photo_url: stockPhoto("yamaha-mt07"),
       is_public: true,
       hide_budget: false,
       horsepower: 73,
@@ -69,7 +75,7 @@ const db: Record<string, any[]> = {
       brand: "Volkswagen",
       model: "Golf GTI",
       year: 2015,
-      cover_photo_url: null,
+      cover_photo_url: stockPhoto("vw-golf-gti"),
       is_public: true,
       hide_budget: false,
       horsepower: 230,
@@ -85,7 +91,7 @@ const db: Record<string, any[]> = {
       brand: "Honda",
       model: "CB650R",
       year: 2021,
-      cover_photo_url: null,
+      cover_photo_url: stockPhoto("honda-cb650r"),
       is_public: true,
       hide_budget: false,
       horsepower: 94,
@@ -96,11 +102,11 @@ const db: Record<string, any[]> = {
     },
   ],
   mod_entries: [
-    { id: "e1", vehicle_id: "v1", category: "esthetique", title: "Jantes 18 pouces", description: "Jantes Speedline en remplacement des jantes tôle d'origine.", price: 850, photos: [], entry_date: dateDaysAgo(280), created_at: daysAgo(280) },
-    { id: "e2", vehicle_id: "v1", category: "performance", title: "Reprogrammation moteur", description: "Passage de 105 à 130ch chez un spécialiste local.", price: 600, photos: [], entry_date: dateDaysAgo(180), created_at: daysAgo(180) },
-    { id: "e3", vehicle_id: "v1", category: "confort", title: "Sièges baquets", description: "Sièges Recaro d'occasion, montage par un garage.", price: 1200, photos: [], entry_date: dateDaysAgo(30), created_at: daysAgo(30) },
-    { id: "e4", vehicle_id: "v3", category: "esthetique", title: "Kit carrosserie GTI", description: "Pare-choc, jupes latérales et diffuseur arrière.", price: 950, photos: [], entry_date: dateDaysAgo(10), created_at: daysAgo(10) },
-    { id: "e5", vehicle_id: "v2", category: "performance", title: "Ligne d'échappement Akrapovic", description: "Son plus profond, gain de quelques chevaux.", price: 780, photos: [], entry_date: dateDaysAgo(20), created_at: daysAgo(20) },
+    { id: "e1", vehicle_id: "v1", category: "esthetique", title: "Jantes 18 pouces", description: "Jantes Speedline en remplacement des jantes tôle d'origine.", price: 850, photos: [stockPhoto("mod-jantes-205")], entry_date: dateDaysAgo(280), created_at: daysAgo(280) },
+    { id: "e2", vehicle_id: "v1", category: "performance", title: "Reprogrammation moteur", description: "Passage de 105 à 130ch chez un spécialiste local.", price: 600, photos: [stockPhoto("mod-reprog-205")], entry_date: dateDaysAgo(180), created_at: daysAgo(180) },
+    { id: "e3", vehicle_id: "v1", category: "confort", title: "Sièges baquets", description: "Sièges Recaro d'occasion, montage par un garage.", price: 1200, photos: [stockPhoto("mod-sieges-205")], entry_date: dateDaysAgo(30), created_at: daysAgo(30) },
+    { id: "e4", vehicle_id: "v3", category: "esthetique", title: "Kit carrosserie GTI", description: "Pare-choc, jupes latérales et diffuseur arrière.", price: 950, photos: [stockPhoto("mod-carrosserie-golf")], entry_date: dateDaysAgo(10), created_at: daysAgo(10) },
+    { id: "e5", vehicle_id: "v2", category: "performance", title: "Ligne d'échappement Akrapovic", description: "Son plus profond, gain de quelques chevaux.", price: 780, photos: [stockPhoto("mod-echappement-mt07")], entry_date: dateDaysAgo(20), created_at: daysAgo(20) },
   ],
   maintenance_items: [
     { id: "m1", vehicle_id: "v1", kind: "vidange", label: "Vidange + filtre à huile", due_date: daysFromNow(12), due_mileage: null, last_done_date: null, last_done_mileage: null, completed: false, created_at: daysAgo(100) },

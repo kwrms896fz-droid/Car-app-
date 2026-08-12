@@ -41,6 +41,12 @@ export async function uploadVehiclePhoto(
   userId: string,
   asset: ImagePicker.ImagePickerAsset
 ): Promise<string> {
+  // Mode démo : pas de backend Supabase — on affiche directement le fichier
+  // choisi localement plutôt que de l'envoyer (et de perdre l'URL) en storage.
+  if (process.env.EXPO_PUBLIC_PREVIEW === "1") {
+    return asset.uri;
+  }
+
   if (!asset.base64) {
     throw new Error("Image sans données base64 — réessayez la sélection.");
   }
