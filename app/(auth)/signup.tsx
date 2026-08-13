@@ -6,7 +6,7 @@ import { Button } from "@/components/Button";
 import { Screen } from "@/components/Screen";
 import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing } from "@/lib/theme";
 
 export default function SignupScreen() {
   const { signUpWithPassword } = useAuth();
@@ -66,8 +66,8 @@ export default function SignupScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 30,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 32,
     color: colors.text,
     marginTop: spacing.xl,
   },

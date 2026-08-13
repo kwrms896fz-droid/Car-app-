@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GlassCard } from "@/components/GlassCard";
 import type { MaintenanceItem, Vehicle } from "@/lib/database.types";
 import { maintenanceUrgency } from "@/lib/maintenance";
-import { colors, maintenanceLabels, radius, spacing } from "@/lib/theme";
+import { colors, fonts, maintenanceLabels, radius, spacing } from "@/lib/theme";
 
 const urgencyColor = {
   overdue: colors.danger,
@@ -75,23 +75,23 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   badge: {
+    fontFamily: fonts.bodyBold,
     fontSize: 11,
-    fontWeight: "700",
     borderWidth: 1,
     borderRadius: radius.pill,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   kind: {
+    fontFamily: fonts.bodySemiBold,
     color: colors.textMuted,
     fontSize: 12,
-    fontWeight: "600",
     textTransform: "uppercase",
   },
   label: {
+    fontFamily: fonts.displaySemiBold,
     color: colors.text,
     fontSize: 16,
-    fontWeight: "700",
   },
   vehicle: {
     color: colors.textMuted,

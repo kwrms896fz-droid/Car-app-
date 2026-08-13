@@ -1,42 +1,48 @@
 import type { ViewStyle } from "react-native";
 
-// Direction artistique : structure façon iOS moderne (coins généreux, verre
-// dépoli, hiérarchie typographique nette) + ambiance nocturne néon inspirée
-// de GTA (fond très sombre, accents violet/cyan/rose saturés, forts contrastes).
+// Direction artistique : glassmorphism premium sur fond quasi-noir, deux
+// accents néon seulement (violet principal, cyan en complément — utilisé avec
+// parcimonie), coins généreux et cohérents, typographie Space Grotesk (titres)
+// + Inter (texte courant).
 
 export const colors = {
-  background: "#0A0713",
-  backgroundAlt: "#120B24",
-  surface: "rgba(255,255,255,0.055)",
-  surfaceSolid: "#171029",
-  surfaceAlt: "rgba(255,255,255,0.09)",
-  border: "rgba(255,255,255,0.10)",
+  background: "#0A0A0F",
+  backgroundAlt: "#100B1A",
+  surface: "rgba(255,255,255,0.05)",
+  surfaceSolid: "#151520",
+  surfaceAlt: "rgba(255,255,255,0.08)",
+  border: "rgba(255,255,255,0.1)",
   borderStrong: "rgba(255,255,255,0.18)",
 
-  text: "#F6F3FF",
-  textMuted: "#A79BC7",
-  textDim: "#6F6690",
+  text: "#F5F5F7",
+  textMuted: "#8B8B95",
+  textDim: "#5C5C66",
 
-  // Accents néon
-  primary: "#B026FF", // violet néon — accent principal
-  primarySoft: "rgba(176,38,255,0.16)",
-  cyan: "#22E4E4",
-  cyanSoft: "rgba(34,228,228,0.16)",
-  pink: "#FF2D9E",
-  pinkSoft: "rgba(255,45,158,0.16)",
+  // Les deux seuls accents de marque de l'app — violet principal, cyan en
+  // complément (highlights, icônes actives). Aucune autre couleur saturée ne
+  // doit être introduite pour du chrome UI (boutons, glow, états actifs).
+  primary: "#8B5CF6",
+  primarySoft: "rgba(139,92,246,0.16)",
+  cyan: "#06B6D4",
+  cyanSoft: "rgba(6,182,212,0.16)",
 
-  success: "#39FF88",
-  successSoft: "rgba(57,255,136,0.16)",
-  danger: "#FF3B6B",
-  dangerSoft: "rgba(255,59,107,0.16)",
+  // Utilisée uniquement pour différencier la 3e catégorie de modification
+  // (Confort) dans les badges — jamais pour du chrome UI (boutons, glow).
+  categoryTertiary: "#F59E0B",
+  categoryTertiarySoft: "rgba(245,158,11,0.16)",
 
-  onNeon: "#0A0713", // texte sur fond néon plein
+  success: "#22C55E",
+  successSoft: "rgba(34,197,94,0.16)",
+  danger: "#F43F5E",
+  dangerSoft: "rgba(244,63,94,0.16)",
+
+  onNeon: "#0A0A0F", // texte sur fond néon plein
 };
 
 export const gradients = {
-  background: ["#120B24", "#0A0713", "#0A0713"] as const,
-  primaryButton: ["#C042FF", "#8A1FE0"] as const,
-  cardGlow: ["rgba(176,38,255,0.10)", "rgba(34,228,228,0.03)"] as const,
+  background: ["#120C1F", "#0A0A0F", "#0A0A0F"] as const,
+  primaryButton: ["#A78BFA", "#7C3AED"] as const,
+  cardGlow: ["rgba(139,92,246,0.10)", "rgba(6,182,212,0.03)"] as const,
 };
 
 export const spacing = {
@@ -47,16 +53,26 @@ export const spacing = {
   xl: 32,
 };
 
+// Cartes : 20-24px. Boutons / éléments interactifs : 16px.
 export const radius = {
-  sm: 12,
+  sm: 16,
   md: 20,
-  lg: 28,
-  xl: 36,
+  lg: 24,
+  xl: 32,
   pill: 999,
 };
 
+export const fonts = {
+  display: "SpaceGrotesk_700Bold",
+  displaySemiBold: "SpaceGrotesk_600SemiBold",
+  body: "Inter_400Regular",
+  bodyMedium: "Inter_500Medium",
+  bodySemiBold: "Inter_600SemiBold",
+  bodyBold: "Inter_700Bold",
+};
+
 // Halo néon réutilisable — passer une couleur, obtenir un style d'ombre colorée.
-export function glow(color: string, opacity = 0.55, radiusPx = 16): ViewStyle {
+export function glow(color: string, opacity = 0.4, radiusPx = 20): ViewStyle {
   return {
     shadowColor: color,
     shadowOpacity: opacity,
@@ -66,6 +82,10 @@ export function glow(color: string, opacity = 0.55, radiusPx = 16): ViewStyle {
   };
 }
 
+// Glow "actif" standard — cohérent partout où un élément sélectionné/actif a
+// besoin d'un halo néon violet (spec : 0 0 20px rgba(139,92,246,0.4)).
+export const glowPrimary = glow(colors.primary, 0.4, 20);
+
 export const categoryLabels: Record<string, string> = {
   esthetique: "Esthétique",
   performance: "Performance",
@@ -73,9 +93,9 @@ export const categoryLabels: Record<string, string> = {
 };
 
 export const categoryColors: Record<string, string> = {
-  esthetique: colors.pink,
-  performance: colors.cyan,
-  confort: colors.primary,
+  esthetique: colors.cyan,
+  performance: colors.primary,
+  confort: colors.categoryTertiary,
 };
 
 export const categoryIcons: Record<string, string> = {

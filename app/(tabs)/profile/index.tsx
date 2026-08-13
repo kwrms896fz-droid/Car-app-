@@ -9,7 +9,7 @@ import { Screen } from "@/components/Screen";
 import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { colors, glow, gradients, radius, spacing } from "@/lib/theme";
+import { colors, fonts, glow, gradients, radius, spacing } from "@/lib/theme";
 
 export default function ProfileScreen() {
   const { session, profile, refreshProfile, signOut } = useAuth();
@@ -43,7 +43,7 @@ export default function ProfileScreen() {
       <Text style={styles.title}>Profil</Text>
 
       <View style={styles.avatarRow}>
-        <View style={[styles.avatarRing, glow(colors.primary, 0.4, 14)]}>
+        <View style={[styles.avatarRing, glow(colors.primary, 0.4, 20)]}>
           <View style={styles.avatar}>
             <Ionicons name="person" size={30} color={colors.textMuted} />
           </View>
@@ -92,8 +92,8 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 30,
     color: colors.text,
   },
   pressed: {
@@ -122,9 +122,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   username: {
+    fontFamily: fonts.displaySemiBold,
     color: colors.text,
     fontSize: 20,
-    fontWeight: "800",
   },
   planPill: {
     flexDirection: "row",
@@ -142,9 +142,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.success,
   },
   plan: {
+    fontFamily: fonts.bodySemiBold,
     color: colors.textMuted,
     fontSize: 13,
-    fontWeight: "600",
   },
   upsell: {
     flexDirection: "row",
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   upsellTitle: {
+    fontFamily: fonts.bodyBold,
     color: colors.text,
-    fontWeight: "700",
     fontSize: 15,
   },
   upsellSubtitle: {

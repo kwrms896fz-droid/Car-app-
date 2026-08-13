@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import type { ModEntry, Profile, Vehicle } from "@/lib/database.types";
 import { publicVehicleUrl } from "@/lib/links";
 import { fetchFollowerCount, fetchProfile, follow, isFollowing, unfollow } from "@/lib/social";
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, fonts, radius, spacing } from "@/lib/theme";
 import { computeBudgetTotal, fetchModEntries, fetchVehicle } from "@/lib/vehicles";
 
 export default function PublicVehicleScreen() {
@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   title: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 28,
     color: colors.text,
   },
   subtitle: {

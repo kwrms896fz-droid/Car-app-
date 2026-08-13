@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
-import { colors, glow, gradients, radius, spacing } from "@/lib/theme";
+import { colors, fonts, glow, gradients, radius, spacing } from "@/lib/theme";
 
 interface ButtonProps {
   label: string;
@@ -20,7 +20,7 @@ export function Button({ label, onPress, variant = "primary", loading, disabled,
       onPress={onPress}
       disabled={isDisabled}
       style={({ pressed }) => [
-        variant === "primary" && !isDisabled && glow(colors.primary, 0.45, 14),
+        variant === "primary" && !isDisabled && glow(colors.primary, 0.4, 20),
         isDisabled && styles.disabled,
         pressed && !isDisabled && styles.pressed,
         style,
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   base: {
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
-    borderRadius: radius.md,
+    borderRadius: radius.sm,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.99 }],
   },
   label: {
+    fontFamily: fonts.bodySemiBold,
     fontSize: 16,
-    fontWeight: "700",
     color: colors.text,
   },
   labelPrimary: {

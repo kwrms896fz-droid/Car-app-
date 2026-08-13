@@ -12,7 +12,7 @@ export default function ProfileLayout() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Profil" }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="paywall" options={{ title: "Abonnement", presentation: "modal" }} />
     </Stack>
   );

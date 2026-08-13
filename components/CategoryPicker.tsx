@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { categoryColors, categoryIcons, categoryLabels, colors, glow, radius, spacing } from "@/lib/theme";
+import { categoryColors, categoryIcons, categoryLabels, colors, fonts, glow, radius, spacing } from "@/lib/theme";
 import type { ModCategory } from "@/lib/database.types";
 
 const categories = Object.keys(categoryLabels) as ModCategory[];
@@ -58,7 +58,7 @@ function CategoryTile({
         style={[
           styles.tile,
           { backgroundColor, borderColor, transform: [{ scale }] },
-          selected && glow(accent, 0.5, 12),
+          selected && glow(accent, 0.4, 20),
         ]}
       >
         <View style={[styles.iconCircle, { backgroundColor: selected ? accent : "rgba(255,255,255,0.08)" }]}>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   label: {
+    fontFamily: fonts.bodyBold,
     fontSize: 13,
-    fontWeight: "700",
   },
 });

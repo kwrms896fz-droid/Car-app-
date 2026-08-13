@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { GlassCard } from "@/components/GlassCard";
 import type { ModEntry } from "@/lib/database.types";
-import { categoryColors, categoryIcons, categoryLabels, colors, radius, spacing } from "@/lib/theme";
+import { categoryColors, categoryIcons, categoryLabels, colors, fonts, radius, spacing } from "@/lib/theme";
 
 export function ModEntryCard({ entry }: { entry: ModEntry }) {
   const accent = categoryColors[entry.category] ?? colors.primary;
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   category: {
+    fontFamily: fonts.bodyBold,
     fontSize: 11,
-    fontWeight: "800",
     textTransform: "uppercase",
     letterSpacing: 0.3,
   },
@@ -66,18 +66,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   title: {
+    fontFamily: fonts.displaySemiBold,
     color: colors.text,
     fontSize: 16,
-    fontWeight: "800",
   },
   description: {
     color: colors.textMuted,
     fontSize: 14,
   },
   price: {
+    fontFamily: fonts.bodyBold,
     color: colors.text,
     fontSize: 14,
-    fontWeight: "700",
     marginTop: 2,
   },
 });

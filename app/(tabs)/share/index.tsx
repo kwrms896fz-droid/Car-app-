@@ -9,7 +9,7 @@ import { Screen } from "@/components/Screen";
 import { useAuth } from "@/context/AuthContext";
 import type { ModEntry, Vehicle } from "@/lib/database.types";
 import { publicVehicleUrl } from "@/lib/links";
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, fonts, radius, spacing } from "@/lib/theme";
 import { fetchModEntries, fetchMyVehicles } from "@/lib/vehicles";
 
 interface VehicleWithLatest {
@@ -108,7 +108,7 @@ export default function ShareScreen() {
               <ShareAction
                 icon="sparkles"
                 label="Dernière modif"
-                accent={colors.pink}
+                accent={colors.categoryTertiary}
                 onPress={() => shareLatest(item.vehicle, item.latestEntry)}
               />
             </View>
@@ -148,11 +148,12 @@ function ShareAction({
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 30,
     color: colors.text,
   },
   subtitle: {
+    fontFamily: fonts.body,
     color: colors.textMuted,
     fontSize: 14,
     marginBottom: spacing.sm,

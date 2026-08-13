@@ -63,7 +63,7 @@ export default function NewVehicleScreen() {
           <Pressable
             key={t}
             onPress={() => setType(t)}
-            style={[styles.typeOption, type === t && [styles.typeOptionActive, glow(colors.primary, 0.4, 10)]]}
+            style={[styles.typeOption, type === t && [styles.typeOptionActive, glow(colors.primary, 0.4, 20)]]}
           >
             <Ionicons
               name={t === "moto" ? "bicycle" : "car-sport"}

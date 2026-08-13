@@ -9,7 +9,7 @@ import { VehicleCard } from "@/components/VehicleCard";
 import { useAuth } from "@/context/AuthContext";
 import type { Vehicle } from "@/lib/database.types";
 import { fetchDiscoverVehicles, fetchFeed, type FeedItem } from "@/lib/social";
-import { colors, glow, radius, spacing } from "@/lib/theme";
+import { colors, fonts, glow, radius, spacing } from "@/lib/theme";
 
 type Tab = "feed" | "discover";
 
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   headerTitle: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 30,
     color: colors.text,
   },
   tabs: {
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
   tabActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
-    ...glow(colors.primary, 0.4, 10),
+    ...glow(colors.primary, 0.4, 20),
   },
   tabLabel: {
+    fontFamily: fonts.bodyBold,
     color: colors.textMuted,
-    fontWeight: "700",
     fontSize: 13,
   },
   tabLabelActive: {

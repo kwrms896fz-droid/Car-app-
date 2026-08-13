@@ -64,7 +64,7 @@ export default function NewMaintenanceScreen() {
           <Pressable
             key={v.id}
             onPress={() => setVehicleId(v.id)}
-            style={[styles.chip, vehicleId === v.id && [styles.chipActive, glow(colors.primary, 0.4, 10)]]}
+            style={[styles.chip, vehicleId === v.id && [styles.chipActive, glow(colors.primary, 0.4, 20)]]}
           >
             <Text style={[styles.chipText, vehicleId === v.id && styles.chipTextActive]}>
               {v.brand} {v.model}
@@ -79,7 +79,7 @@ export default function NewMaintenanceScreen() {
           <Pressable
             key={k}
             onPress={() => setKind(k)}
-            style={[styles.chip, kind === k && [styles.chipActive, glow(colors.primary, 0.4, 10)]]}
+            style={[styles.chip, kind === k && [styles.chipActive, glow(colors.primary, 0.4, 20)]]}
           >
             <Text style={[styles.chipText, kind === k && styles.chipTextActive]}>{maintenanceLabels[k]}</Text>
           </Pressable>
@@ -110,6 +110,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   chipRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: spacing.sm,
     paddingBottom: spacing.xs,
   },

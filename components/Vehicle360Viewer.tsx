@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { useMemo, useRef, useState } from "react";
 import { PanResponder, StyleSheet, Text, View } from "react-native";
 
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, fonts, radius, spacing } from "@/lib/theme";
 
 interface Vehicle360ViewerProps {
   photos: string[];
@@ -95,28 +95,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "rgba(10,7,19,0.6)",
+    backgroundColor: "rgba(10,10,15,0.6)",
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 4,
   },
   hintText: {
+    fontFamily: fonts.bodySemiBold,
     color: colors.text,
     fontSize: 11,
-    fontWeight: "600",
   },
   dots: {
     position: "absolute",
     top: spacing.sm,
     right: spacing.sm,
-    backgroundColor: "rgba(10,7,19,0.6)",
+    backgroundColor: "rgba(10,10,15,0.6)",
     borderRadius: radius.pill,
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
   dotsText: {
+    fontFamily: fonts.bodyBold,
     color: colors.text,
     fontSize: 11,
-    fontWeight: "700",
   },
 });

@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { Vehicle } from "@/lib/database.types";
-import { colors, glow, radius, spacing } from "@/lib/theme";
+import { colors, fonts, glow, radius, spacing } from "@/lib/theme";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -43,7 +43,7 @@ export function VehicleCard({ vehicle, budgetTotal, onPress }: VehicleCardProps)
     <Pressable onPressIn={animateIn} onPress={animateOutAndNavigate}>
       <Animated.View style={[styles.wrap, glow(colors.primary, 0.28, 22), { transform: [{ scale }, { translateY }] }]}>
         <LinearGradient
-          colors={["#1B1030", "#0E0A1D", "#0A0713"]}
+          colors={["#1A1030", "#100B1A", "#0A0A0F"]}
           start={{ x: 0.1, y: 0 }}
           end={{ x: 0.9, y: 1 }}
           style={styles.stage}
@@ -63,7 +63,7 @@ export function VehicleCard({ vehicle, budgetTotal, onPress }: VehicleCardProps)
           )}
 
           <LinearGradient
-            colors={["transparent", "rgba(10,7,19,0.55)", "rgba(10,7,19,0.94)"]}
+            colors={["transparent", "rgba(10,10,15,0.55)", "rgba(10,10,15,0.94)"]}
             style={styles.vignette}
             pointerEvents="none"
           />
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     gap: 2,
-    backgroundColor: "rgba(10,7,19,0.65)",
+    backgroundColor: "rgba(10,10,15,0.65)",
     borderWidth: 1,
     borderColor: colors.cyanSoft,
     borderRadius: radius.pill,
@@ -149,14 +149,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   hpValue: {
+    fontFamily: fonts.bodyBold,
     color: colors.cyan,
     fontSize: 13,
-    fontWeight: "800",
   },
   hpUnit: {
+    fontFamily: fonts.bodyBold,
     color: colors.cyan,
     fontSize: 10,
-    fontWeight: "700",
     opacity: 0.85,
   },
   info: {
@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   title: {
+    fontFamily: fonts.displaySemiBold,
     fontSize: 20,
-    fontWeight: "800",
     color: colors.text,
     textShadowColor: "rgba(0,0,0,0.6)",
     textShadowRadius: 8,
@@ -180,13 +180,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   subtitle: {
+    fontFamily: fonts.bodySemiBold,
     fontSize: 13,
     color: colors.textMuted,
-    fontWeight: "600",
   },
   budget: {
+    fontFamily: fonts.bodyBold,
     fontSize: 14,
-    fontWeight: "800",
     color: colors.cyan,
   },
 });

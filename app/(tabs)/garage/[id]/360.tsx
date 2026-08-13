@@ -6,6 +6,7 @@ import { Alert, Pressable, Share, StyleSheet, Text, View } from "react-native";
 import { Button } from "@/components/Button";
 import { GlassCard } from "@/components/GlassCard";
 import { Screen } from "@/components/Screen";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { Vehicle360Viewer } from "@/components/Vehicle360Viewer";
 import { useAuth } from "@/context/AuthContext";
 import type { Vehicle } from "@/lib/database.types";
@@ -98,7 +99,7 @@ export default function Vehicle360Screen() {
 
   return (
     <Screen scroll>
-      <Text style={styles.title}>Vue 360°</Text>
+      <ScreenHeader title="Vue 360°" />
 
       <View style={styles.tabs}>
         <TabButton label="Avant" active={tab === "before"} onPress={() => setTab("before")} />
@@ -134,6 +135,12 @@ export default function Vehicle360Screen() {
 
       {isOwner ? (
         <View style={styles.ownerActions}>
+          {photos.length === 0 ? (
+            <Text style={styles.uploadHint}>
+              Prenez 8 à 10 photos en tournant autour du véhicule (même intervalle entre chaque
+              prise) pour une rotation fluide.
+            </Text>
+          ) : null}
           <Button
             label={photos.length > 0 ? "Remplacer les photos" : "Ajouter des photos (rotation)"}
             onPress={onUploadPhotos}
@@ -147,7 +154,7 @@ export default function Vehicle360Screen() {
         </View>
       ) : null}
 
-      <Pressable onPress={onShare} style={[styles.shareButton, glow(colors.cyan, 0.35, 10)]}>
+      <Pressable onPress={onShare} style={[styles.shareButton, glow(colors.cyan, 0.4, 20)]}>
         <Ionicons name="share-social" size={18} color={colors.cyan} />
         <Text style={styles.shareText}>Partager cette vue</Text>
       </Pressable>
@@ -173,7 +180,7 @@ function TabButton({
       style={[
         styles.tabButton,
         active && styles.tabButtonActive,
-        active && glow(colors.primary, 0.4, 10),
+        active && glow(colors.primary, 0.4, 20),
         disabled && styles.tabButtonDisabled,
       ]}
     >
@@ -193,11 +200,6 @@ function SummaryStat({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: colors.text,
-  },
   tabs: {
     flexDirection: "row",
     gap: spacing.sm,
@@ -271,6 +273,11 @@ const styles = StyleSheet.create({
   },
   ownerActions: {
     gap: spacing.sm,
+  },
+  uploadHint: {
+    color: colors.textMuted,
+    fontSize: 12,
+    textAlign: "center",
   },
   shareButton: {
     flexDirection: "row",

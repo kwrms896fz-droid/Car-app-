@@ -86,7 +86,7 @@ export default function VehicleDetailScreen() {
           {isOwner ? (
             <ActionRow
               icon="add-circle"
-              accent={colors.pink}
+              accent={colors.primary}
               label="Ajouter une modification"
               subtitle="Nouvelle entrée dans le journal"
               onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/add-entry`)}
@@ -96,7 +96,7 @@ export default function VehicleDetailScreen() {
             icon="sparkles"
             accent={colors.primary}
             label="Recommandation IA"
-            subtitle="Visualisez le résultat avant de vous lancer"
+            subtitle="Conseils personnalisés selon votre budget"
             onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/recommendations`)}
           />
           <ActionRow

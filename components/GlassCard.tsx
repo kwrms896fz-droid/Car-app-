@@ -13,7 +13,7 @@ interface GlassCardProps {
 export function GlassCard({ children, style, radiusSize = radius.lg }: GlassCardProps) {
   return (
     <View style={[styles.wrap, { borderRadius: radiusSize }, style]}>
-      <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
+      <BlurView intensity={60} tint="dark" style={StyleSheet.absoluteFill} />
       <View style={styles.tint} />
       {children}
     </View>

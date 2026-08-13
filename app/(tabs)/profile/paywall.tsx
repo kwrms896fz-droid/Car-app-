@@ -2,8 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
 import { Button } from "@/components/Button";
+import { GlassCard } from "@/components/GlassCard";
 import { Screen } from "@/components/Screen";
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, fonts, radius, spacing } from "@/lib/theme";
 
 const features = [
   "Véhicules et journal de modifications illimités",
@@ -38,17 +39,17 @@ export default function PaywallScreen() {
         ))}
       </View>
 
-      <View style={styles.planCard}>
+      <GlassCard radiusSize={radius.lg} style={styles.planCard}>
         <Text style={styles.planTitle}>Annuel</Text>
         <Text style={styles.planPrice}>Tarif réduit à l'engagement annuel</Text>
         <Button label="S'abonner à l'année" onPress={() => onSubscribe("yearly")} />
-      </View>
+      </GlassCard>
 
-      <View style={styles.planCard}>
+      <GlassCard radiusSize={radius.lg} style={styles.planCard}>
         <Text style={styles.planTitle}>Mensuel</Text>
         <Text style={styles.planPrice}>Sans engagement</Text>
         <Button label="S'abonner au mois" onPress={() => onSubscribe("monthly")} variant="secondary" />
-      </View>
+      </GlassCard>
 
       <Text style={styles.note}>
         En cas de désabonnement, votre historique reste consultable en lecture seule : l'ajout de
@@ -60,8 +61,8 @@ export default function PaywallScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 28,
     color: colors.text,
     marginTop: spacing.md,
   },
@@ -83,18 +84,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   planCard: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
     padding: spacing.md,
     gap: spacing.sm,
     marginTop: spacing.sm,
   },
   planTitle: {
+    fontFamily: fonts.bodyBold,
     color: colors.text,
     fontSize: 18,
-    fontWeight: "700",
   },
   planPrice: {
     color: colors.textMuted,

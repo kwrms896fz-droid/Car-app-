@@ -9,7 +9,7 @@ import { Screen } from "@/components/Screen";
 import { useAuth } from "@/context/AuthContext";
 import type { MaintenanceItem, Vehicle } from "@/lib/database.types";
 import { fetchMaintenanceForVehicles, markMaintenanceDone } from "@/lib/maintenance";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing } from "@/lib/theme";
 import { fetchMyVehicles } from "@/lib/vehicles";
 
 export default function MaintenanceScreen() {
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 30,
     color: colors.text,
   },
   limitNotice: {

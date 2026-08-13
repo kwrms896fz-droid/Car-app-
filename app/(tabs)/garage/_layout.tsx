@@ -18,9 +18,9 @@ export default function GarageLayout() {
       <Stack.Screen name="[id]/add-entry" options={{ title: "Ajouter une modif", presentation: "modal" }} />
       <Stack.Screen
         name="[id]/recommendations"
-        options={{ title: "Recommandations IA", presentation: "modal" }}
+        options={{ headerShown: false, presentation: "modal" }}
       />
-      <Stack.Screen name="[id]/360" options={{ title: "Vue 360°" }} />
+      <Stack.Screen name="[id]/360" options={{ headerShown: false }} />
     </Stack>
   );
 }

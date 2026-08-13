@@ -10,7 +10,7 @@ interface HeaderAddButtonProps {
 
 export function HeaderAddButton({ onPress }: HeaderAddButtonProps) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [glow(colors.primary, 0.5, 12), pressed && styles.pressed]}>
+    <Pressable onPress={onPress} style={({ pressed }) => [glow(colors.primary, 0.4, 20), pressed && styles.pressed]}>
       <LinearGradient colors={gradients.primaryButton} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.button}>
         <Ionicons name="add" size={26} color={colors.onNeon} />
       </LinearGradient>

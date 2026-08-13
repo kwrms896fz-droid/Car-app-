@@ -7,7 +7,7 @@ import { GlassCard } from "@/components/GlassCard";
 import { useAuth } from "@/context/AuthContext";
 import type { FeedItem } from "@/lib/social";
 import { fetchLikeCount, hasLiked, like, unlike } from "@/lib/social";
-import { categoryColors, categoryIcons, categoryLabels, colors, radius, spacing } from "@/lib/theme";
+import { categoryColors, categoryIcons, categoryLabels, colors, fonts, radius, spacing } from "@/lib/theme";
 
 export function FeedEntryCard({ item, onPress }: { item: FeedItem; onPress: () => void }) {
   const { session } = useAuth();
@@ -57,7 +57,7 @@ export function FeedEntryCard({ item, onPress }: { item: FeedItem; onPress: () =
           {entry.description ? <Text style={styles.description}>{entry.description}</Text> : null}
 
           <Pressable onPress={onToggleLike} style={styles.likeRow} hitSlop={8}>
-            <Ionicons name={liked ? "heart" : "heart-outline"} size={18} color={liked ? colors.pink : colors.textMuted} />
+            <Ionicons name={liked ? "heart" : "heart-outline"} size={18} color={liked ? colors.danger : colors.textMuted} />
             <Text style={styles.likeCount}>{likeCount}</Text>
           </Pressable>
         </View>
@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
     paddingTop: spacing.sm,
   },
   headerText: {
+    fontFamily: fonts.bodySemiBold,
     color: colors.textMuted,
     fontSize: 12,
-    fontWeight: "600",
   },
   photo: {
     width: "100%",
@@ -99,15 +99,15 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   category: {
+    fontFamily: fonts.bodyBold,
     fontSize: 11,
-    fontWeight: "800",
     textTransform: "uppercase",
     letterSpacing: 0.3,
   },
   title: {
+    fontFamily: fonts.displaySemiBold,
     color: colors.text,
     fontSize: 16,
-    fontWeight: "800",
   },
   description: {
     color: colors.textMuted,

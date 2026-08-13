@@ -48,8 +48,8 @@ const db: Record<string, any[]> = {
       hide_budget: false,
       horsepower: 132,
       is_completed: true,
-      photos_360_before: rotationFrames("Avant", 8, "1a1a2e", "6f6690"),
-      photos_360_after: rotationFrames("Apres", 8, "1a0e2e", "B026FF"),
+      photos_360_before: rotationFrames("Avant", 8, "151520", "8b8b95"),
+      photos_360_after: rotationFrames("Apres", 8, "151520", "8B5CF6"),
       created_at: daysAgo(300),
     },
     {
@@ -64,7 +64,7 @@ const db: Record<string, any[]> = {
       hide_budget: false,
       horsepower: 73,
       is_completed: false,
-      photos_360_before: rotationFrames("Avant", 6, "0e1a2e", "22E4E4"),
+      photos_360_before: rotationFrames("Avant", 6, "151520", "06B6D4"),
       photos_360_after: [],
       created_at: daysAgo(60),
     },
@@ -307,11 +307,7 @@ export const previewSupabase: any = {
     },
   },
   functions: {
-    invoke: async (name: string) => {
-      if (name === "visualize-mods") {
-        await new Promise((r) => setTimeout(r, 1400));
-        return { data: { imageUrl: stockPhoto("los-santos-customs-concept", 1024, 683) }, error: null };
-      }
+    invoke: async (_name: string) => {
       await new Promise((r) => setTimeout(r, 600));
       return { data: { recommendations: mockRecommendations }, error: null };
     },

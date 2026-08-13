@@ -8,7 +8,7 @@ import { Screen } from "@/components/Screen";
 import { VehicleCard } from "@/components/VehicleCard";
 import { useAuth } from "@/context/AuthContext";
 import type { Vehicle } from "@/lib/database.types";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing } from "@/lib/theme";
 import { computeBudgetTotal, fetchModEntries, fetchMyVehicles } from "@/lib/vehicles";
 
 const FREE_VEHICLE_LIMIT = 1;
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontFamily: fonts.display,
+    fontSize: 30,
     color: colors.text,
   },
   limitNotice: {

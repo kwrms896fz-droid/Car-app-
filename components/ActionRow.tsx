@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, fonts, radius, spacing } from "@/lib/theme";
 
 interface ActionRowProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
-    backgroundColor: "rgba(255,255,255,0.045)",
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.lg,
@@ -54,9 +54,9 @@ const styles = StyleSheet.create({
     gap: 1,
   },
   label: {
+    fontFamily: fonts.bodyBold,
     color: colors.text,
     fontSize: 15,
-    fontWeight: "700",
   },
   subtitle: {
     color: colors.textMuted,

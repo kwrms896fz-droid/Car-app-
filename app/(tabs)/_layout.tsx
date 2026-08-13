@@ -87,7 +87,10 @@ function CenterTabButton(props: any) {
 
   return (
     <View style={styles.centerButtonWrap} pointerEvents="box-none">
-      <Pressable onPress={onPress} style={[styles.centerButton, glow(colors.primary, focused ? 0.75 : 0.5, 16)]}>
+      <Pressable
+        onPress={onPress}
+        style={[styles.centerButton, glow(colors.primary, focused ? 0.55 : 0.4, 20)]}
+      >
         <LinearGradient
           colors={gradients.primaryButton}
           start={{ x: 0, y: 0 }}
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(10,7,19,0.55)",
+    backgroundColor: "rgba(10,10,15,0.55)",
   },
   centerButtonWrap: {
     flex: 1,
