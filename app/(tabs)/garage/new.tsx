@@ -10,7 +10,7 @@ import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
 import type { ImagePickerAsset } from "expo-image-picker";
 import { pickImage, uploadVehiclePhoto } from "@/lib/storage";
-import { colors, glow, radius, spacing } from "@/lib/theme";
+import { colors, fonts, glow, radius, spacing } from "@/lib/theme";
 import { createVehicle } from "@/lib/vehicles";
 import type { VehicleType } from "@/lib/database.types";
 
@@ -21,6 +21,7 @@ export default function NewVehicleScreen() {
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [horsepower, setHorsepower] = useState("");
+  const [mileage, setMileage] = useState("");
   const [photo, setPhoto] = useState<ImagePickerAsset | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,7 @@ export default function NewVehicleScreen() {
         model: model.trim(),
         year: year ? Number(year) : undefined,
         horsepower: horsepower ? Number(horsepower) : undefined,
+        mileage: mileage ? Number(mileage) : undefined,
         cover_photo_url,
       });
       router.replace(`/(tabs)/garage/${vehicle.id}`);
@@ -104,6 +106,13 @@ export default function NewVehicleScreen() {
         value={horsepower}
         onChangeText={setHorsepower}
       />
+      <TextField
+        label="Kilométrage — optionnel"
+        placeholder="Ex. 85000"
+        keyboardType="number-pad"
+        value={mileage}
+        onChangeText={setMileage}
+      />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -134,8 +143,8 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   typeLabel: {
+    fontFamily: fonts.bodySemiBold,
     color: colors.textMuted,
-    fontWeight: "600",
   },
   typeLabelActive: {
     color: colors.onNeon,

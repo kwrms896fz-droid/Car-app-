@@ -28,6 +28,7 @@ export async function createVehicle(input: {
   year?: number;
   cover_photo_url?: string;
   horsepower?: number;
+  mileage?: number;
 }): Promise<Vehicle> {
   const { data, error } = await supabase.from("vehicles").insert(input).select().single();
   if (error) throw error;
@@ -67,6 +68,7 @@ export async function createModEntry(input: {
   price?: number;
   photos?: string[];
   entry_date?: string;
+  resulting_horsepower?: number;
 }): Promise<ModEntry> {
   const { data, error } = await supabase.from("mod_entries").insert(input).select().single();
   if (error) throw error;

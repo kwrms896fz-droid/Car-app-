@@ -3,6 +3,12 @@ export type ModCategory = "esthetique" | "performance" | "confort";
 export type MaintenanceKind = "vidange" | "pneus" | "controle_technique" | "freins" | "autre";
 export type NotificationType = "follow" | "new_mod_entry" | "like" | "comment";
 export type SubscriptionPlan = "monthly" | "yearly";
+export type PowerLogSource = "banc" | "estime" | "constructeur";
+export type BuildProjectStatus = "draft" | "in_progress" | "done";
+export type BuildItemCategory = "esthetique" | "performance" | "confort" | "main_oeuvre" | "autre";
+export type Difficulty = "facile" | "moyen" | "difficile";
+export type UsageType = "daily" | "piste" | "drift" | "show" | "rallye";
+export type ReliabilityPreference = "fiabilite" | "equilibre" | "performance_max";
 
 export type Profile = {
   id: string;
@@ -25,6 +31,7 @@ export type Vehicle = {
   is_public: boolean;
   hide_budget: boolean;
   horsepower: number | null;
+  mileage: number | null;
   is_completed: boolean;
   photos_360_before: string[];
   photos_360_after: string[];
@@ -42,6 +49,40 @@ export type ModEntry = {
   price: number | null;
   photos: string[];
   entry_date: string;
+  resulting_horsepower: number | null;
+  created_at: string;
+};
+
+export type PowerLog = {
+  id: string;
+  vehicle_id: string;
+  recorded_date: string;
+  horsepower: number;
+  torque_nm: number | null;
+  source: PowerLogSource;
+  track_name: string | null;
+  lap_time_seconds: number | null;
+  notes: string | null;
+  created_at: string;
+};
+
+export type BuildProject = {
+  id: string;
+  vehicle_id: string;
+  title: string;
+  target_horsepower: number | null;
+  status: BuildProjectStatus;
+  created_at: string;
+};
+
+export type BuildProjectItem = {
+  id: string;
+  project_id: string;
+  label: string;
+  category: BuildItemCategory;
+  estimated_price: number | null;
+  difficulty: Difficulty | null;
+  is_done: boolean;
   created_at: string;
 };
 
@@ -118,7 +159,7 @@ export type Database = {
       vehicles: TableDef<
         Vehicle,
         Pick<Vehicle, "owner_id" | "type_vehicule" | "brand" | "model"> &
-          Partial<Pick<Vehicle, "year" | "cover_photo_url" | "is_public" | "hide_budget" | "horsepower">>,
+          Partial<Pick<Vehicle, "year" | "cover_photo_url" | "is_public" | "hide_budget" | "horsepower" | "mileage">>,
         Partial<
           Pick<
             Vehicle,
@@ -129,6 +170,7 @@ export type Database = {
             | "is_public"
             | "hide_budget"
             | "horsepower"
+            | "mileage"
             | "is_completed"
             | "photos_360_before"
             | "photos_360_after"
@@ -138,7 +180,23 @@ export type Database = {
       mod_entries: TableDef<
         ModEntry,
         Pick<ModEntry, "vehicle_id" | "category" | "title"> &
-          Partial<Pick<ModEntry, "description" | "price" | "photos" | "entry_date">>
+          Partial<Pick<ModEntry, "description" | "price" | "photos" | "entry_date" | "resulting_horsepower">>
+      >;
+      power_logs: TableDef<
+        PowerLog,
+        Pick<PowerLog, "vehicle_id" | "horsepower"> &
+          Partial<Pick<PowerLog, "recorded_date" | "torque_nm" | "source" | "track_name" | "lap_time_seconds" | "notes">>
+      >;
+      build_projects: TableDef<
+        BuildProject,
+        Pick<BuildProject, "vehicle_id" | "title"> & Partial<Pick<BuildProject, "target_horsepower" | "status">>,
+        Partial<Pick<BuildProject, "title" | "target_horsepower" | "status">>
+      >;
+      build_project_items: TableDef<
+        BuildProjectItem,
+        Pick<BuildProjectItem, "project_id" | "label" | "category"> &
+          Partial<Pick<BuildProjectItem, "estimated_price" | "difficulty" | "is_done">>,
+        Partial<Pick<BuildProjectItem, "label" | "category" | "estimated_price" | "difficulty" | "is_done">>
       >;
       maintenance_items: TableDef<
         MaintenanceItem,

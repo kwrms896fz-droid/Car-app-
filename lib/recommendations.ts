@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { ModCategory } from "@/lib/database.types";
+import type { ModCategory, ReliabilityPreference, UsageType } from "@/lib/database.types";
 
 export interface Recommendation {
   title: string;
@@ -7,21 +7,30 @@ export interface Recommendation {
   estimated_price: number;
   difficulty: "facile" | "moyen" | "difficile";
   explanation: string;
+  expected_gain: string;
+  reliability_risk: string;
 }
 
-export async function fetchRecommendations(
+export interface Stage {
+  title: string;
+  recommendations: Recommendation[];
+}
+
+export async function fetchPreparationPlan(
   vehicleId: string,
   objective: string,
-  budget: number
-): Promise<Recommendation[]> {
+  budget: number,
+  usage: UsageType,
+  reliability: ReliabilityPreference
+): Promise<Stage[]> {
   const { data, error } = await supabase.functions.invoke<{
-    recommendations?: Recommendation[];
+    stages?: Stage[];
     error?: string;
   }>("ai-recommendations", {
-    body: { vehicleId, objective, budget },
+    body: { vehicleId, objective, budget, usage, reliability },
   });
 
   if (error) throw error;
   if (data?.error) throw new Error(data.error);
-  return data?.recommendations ?? [];
+  return data?.stages ?? [];
 }

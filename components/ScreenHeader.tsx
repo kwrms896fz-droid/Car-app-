@@ -16,10 +16,9 @@ export function ScreenHeader({ title }: ScreenHeaderProps) {
       <Pressable onPress={() => router.back()} hitSlop={10} style={styles.backButton}>
         <Ionicons name="chevron-back" size={22} color={colors.text} />
       </Pressable>
-      <Text style={styles.title} numberOfLines={1}>
+      <Text style={styles.title} numberOfLines={2}>
         {title}
       </Text>
-      <View style={styles.spacer} />
     </View>
   );
 }
@@ -37,14 +36,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.06)",
+    flexShrink: 0,
   },
   title: {
     fontFamily: fonts.display,
     fontSize: 20,
     color: colors.text,
+    flex: 1,
     flexShrink: 1,
-  },
-  spacer: {
-    width: 36,
   },
 });

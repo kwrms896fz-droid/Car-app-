@@ -6,11 +6,13 @@ import { FlatList, Share, StyleSheet, Text, View } from "react-native";
 
 import { ActionRow } from "@/components/ActionRow";
 import { GlassCard } from "@/components/GlassCard";
+import { PowerTimeline } from "@/components/PowerTimeline";
 import { Screen } from "@/components/Screen";
 import { ModEntryCard } from "@/components/ModEntryCard";
 import { useAuth } from "@/context/AuthContext";
-import type { ModEntry, Vehicle } from "@/lib/database.types";
-import { colors, radius, spacing } from "@/lib/theme";
+import { buildPowerTimeline, fetchPowerLogs } from "@/lib/buildPlanner";
+import type { ModEntry, PowerLog, Vehicle } from "@/lib/database.types";
+import { colors, fonts, radius, spacing } from "@/lib/theme";
 import { computeBudgetTotal, fetchModEntries, fetchVehicle } from "@/lib/vehicles";
 import { publicVehicleUrl } from "@/lib/links";
 
@@ -20,12 +22,17 @@ export default function VehicleDetailScreen() {
   const navigation = useNavigation();
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [entries, setEntries] = useState<ModEntry[]>([]);
+  const [powerLogs, setPowerLogs] = useState<PowerLog[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     const v = await fetchVehicle(id);
     setVehicle(v);
-    if (v) setEntries(await fetchModEntries(v.id));
+    if (v) {
+      const [modEntries, logs] = await Promise.all([fetchModEntries(v.id), fetchPowerLogs(v.id)]);
+      setEntries(modEntries);
+      setPowerLogs(logs);
+    }
   }, [id]);
 
   useFocusEffect(
@@ -51,6 +58,7 @@ export default function VehicleDetailScreen() {
 
   const isOwner = vehicle && session && vehicle.owner_id === session.user.id;
   const budgetTotal = computeBudgetTotal(entries);
+  const powerTimeline = buildPowerTimeline(entries, powerLogs);
 
   const onShare = async () => {
     if (!vehicle) return;
@@ -75,11 +83,21 @@ export default function VehicleDetailScreen() {
       )}
 
       <View style={styles.content}>
-        {!vehicle?.hide_budget ? (
-          <GlassCard radiusSize={radius.md} style={styles.budgetCard}>
-            <Text style={styles.budgetLabel}>Budget total investi</Text>
-            <Text style={styles.budgetValue}>{budgetTotal.toLocaleString("fr-FR")} €</Text>
-          </GlassCard>
+        {!vehicle?.hide_budget || vehicle?.mileage ? (
+          <View style={styles.statsRow}>
+            {!vehicle?.hide_budget ? (
+              <GlassCard radiusSize={radius.md} style={styles.statCard}>
+                <Text style={styles.statLabel}>Budget investi</Text>
+                <Text style={styles.statValue}>{budgetTotal.toLocaleString("fr-FR")} €</Text>
+              </GlassCard>
+            ) : null}
+            {vehicle?.mileage ? (
+              <GlassCard radiusSize={radius.md} style={styles.statCard}>
+                <Text style={styles.statLabel}>Kilométrage</Text>
+                <Text style={styles.statValue}>{vehicle.mileage.toLocaleString("fr-FR")} km</Text>
+              </GlassCard>
+            ) : null}
+          </View>
         ) : null}
 
         <View style={styles.actionsList}>
@@ -95,9 +113,23 @@ export default function VehicleDetailScreen() {
           <ActionRow
             icon="sparkles"
             accent={colors.primary}
-            label="Recommandation IA"
-            subtitle="Conseils personnalisés selon votre budget"
+            label="Assistant de préparation"
+            subtitle="Plan par étapes selon usage et budget"
             onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/recommendations`)}
+          />
+          <ActionRow
+            icon="calculator"
+            accent={colors.categoryTertiary}
+            label="Budget & Projets"
+            subtitle="Construis et chiffre ton projet"
+            onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/budget`)}
+          />
+          <ActionRow
+            icon="git-compare"
+            accent={colors.cyan}
+            label="Vérificateur de compatibilité"
+            subtitle="Avis IA à vérifier avec un pro"
+            onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/compatibility`)}
           />
           <ActionRow
             icon="sync"
@@ -108,6 +140,15 @@ export default function VehicleDetailScreen() {
           />
           <ActionRow icon="share-social" accent={colors.text} label="Partager" subtitle="Lien public de la fiche" onPress={onShare} />
         </View>
+
+        {powerTimeline.length > 0 ? (
+          <>
+            <Text style={styles.sectionTitle}>Progression de puissance</Text>
+            <GlassCard radiusSize={radius.lg} style={styles.timelineCard}>
+              <PowerTimeline points={powerTimeline} />
+            </GlassCard>
+          </>
+        ) : null}
 
         <Text style={styles.sectionTitle}>Historique des modifications</Text>
 
@@ -144,26 +185,34 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     gap: spacing.md,
   },
-  budgetCard: {
+  statsRow: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  statCard: {
+    flex: 1,
     padding: spacing.md,
   },
-  budgetLabel: {
+  statLabel: {
     color: colors.textMuted,
     fontSize: 13,
   },
-  budgetValue: {
+  statValue: {
+    fontFamily: fonts.displaySemiBold,
     color: colors.cyan,
-    fontSize: 28,
-    fontWeight: "800",
+    fontSize: 24,
     marginTop: 2,
   },
   actionsList: {
     gap: spacing.sm,
   },
+  timelineCard: {
+    padding: spacing.md,
+  },
   sectionTitle: {
+    fontFamily: fonts.bodyBold,
     color: colors.text,
     fontSize: 18,
-    fontWeight: "700",
     marginTop: spacing.sm,
   },
   emptyText: {

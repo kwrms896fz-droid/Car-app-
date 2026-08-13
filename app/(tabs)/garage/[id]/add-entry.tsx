@@ -21,6 +21,7 @@ export default function AddEntryScreen() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [resultingHorsepower, setResultingHorsepower] = useState("");
   const [photo, setPhoto] = useState<ImagePickerAsset | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +46,7 @@ export default function AddEntryScreen() {
         title: title.trim(),
         description: description.trim() || undefined,
         price: price ? Number(price) : undefined,
+        resulting_horsepower: resultingHorsepower ? Number(resultingHorsepower) : undefined,
         photos,
       });
       router.back();
@@ -86,6 +88,17 @@ export default function AddEntryScreen() {
         value={price}
         onChangeText={setPrice}
       />
+      <TextField
+        label="Puissance obtenue (ch) — optionnel"
+        keyboardType="number-pad"
+        placeholder="Ex. 340"
+        value={resultingHorsepower}
+        onChangeText={setResultingHorsepower}
+      />
+      <Text style={styles.hint}>
+        Renseigne ce champ si cette modification a changé la puissance du véhicule — ça alimente
+        automatiquement la timeline de progression sur la fiche.
+      </Text>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -116,6 +129,11 @@ const styles = StyleSheet.create({
   },
   photoLabel: {
     color: colors.textMuted,
+  },
+  hint: {
+    color: colors.textMuted,
+    fontSize: 12,
+    marginTop: -spacing.sm,
   },
   error: {
     color: colors.danger,

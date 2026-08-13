@@ -53,8 +53,7 @@ npm install
 ### 2. Créer un projet Supabase
 
 1. Créez un projet sur [supabase.com](https://supabase.com).
-2. Dans l'éditeur SQL, exécutez `supabase/migrations/0001_init.sql` (tables, RLS,
-   triggers de notifications, bucket de stockage `vehicle-photos`).
+2. Exécutez les migrations SQL (voir étape 3 ci-dessous).
 3. Copiez `.env.example` vers `.env` et renseignez :
    - `EXPO_PUBLIC_SUPABASE_URL`
    - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
@@ -63,20 +62,28 @@ npm install
 4. Dans **Authentication > Providers**, activez Email (et Google/Apple si besoin —
    non câblés dans ce scaffold, à ajouter via `expo-auth-session`).
 
-### 3. Déployer la fonction de recommandations IA
+### 3. Exécuter les migrations SQL
+
+Exécutez `supabase/migrations/0001_init.sql` **puis** `supabase/migrations/0002_build_planner.sql`
+(dans cet ordre) via l'éditeur SQL Supabase ou `supabase db push`. Le second fichier
+ajoute les tables du planificateur de préparation (timeline de puissance, projets budget).
+
+### 4. Déployer les fonctions IA
 
 ```bash
 npx supabase login
 npx supabase link --project-ref <votre-ref-projet>
 npx supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
 npx supabase functions deploy ai-recommendations
+npx supabase functions deploy check-compatibility
 ```
 
-La fonction (`supabase/functions/ai-recommendations`) vérifie que l'utilisateur est
-propriétaire du véhicule, appelle l'API Claude côté serveur (la clé API n'est jamais
-exposée au client) et renvoie une liste structurée de recommandations en JSON.
+Les deux fonctions vérifient que l'utilisateur est propriétaire du véhicule et appellent
+l'API Claude côté serveur (la clé API n'est jamais exposée au client) :
+- `ai-recommendations` : génère un plan de préparation par étapes (JSON structuré).
+- `check-compatibility` : avis de compatibilité de pièces / question libre (JSON structuré).
 
-### 4. Lancer l'app
+### 5. Lancer l'app
 
 ```bash
 npm run start   # puis 'i' (iOS), 'a' (Android) ou 'w' (web)
@@ -93,8 +100,10 @@ components/                Composants UI réutilisables
 context/AuthContext.tsx    Session Supabase + profil utilisateur
 lib/                       Client Supabase, requêtes, thème
 supabase/
-  migrations/0001_init.sql Schéma complet (tables, RLS, triggers, storage)
-  functions/ai-recommendations/  Edge Function appelant l'API Claude
+  migrations/0001_init.sql          Schéma initial (tables, RLS, triggers, storage)
+  migrations/0002_build_planner.sql Timeline de puissance, projets budget
+  functions/ai-recommendations/     Edge Function : plan de préparation par étapes
+  functions/check-compatibility/    Edge Function : avis de compatibilité pièces / question libre
 ```
 
 ## Ce qui est fonctionnel dans ce scaffold
@@ -106,9 +115,21 @@ supabase/
 - Vue 360° : séquence de photos "avant préparation" et "après préparation"
   (une fois marquée comme terminée), visualiseur en glisser-tourner, résumé
   (modèle, année, puissance) et partage. Voir « Limites actuelles » ci-dessous.
-- Recommandations IA (formulaire objectif + budget → appel Edge Function → Claude) : uniquement
-  des conseils texte, aucune génération d'image IA du véhicule (l'IA ne connaît pas
+- **Assistant de préparation** : objectif libre (puissance visée, temps au tour, look...),
+  usage (daily/piste/drift/show/rallye) et préférence de fiabilité → plan de préparation par
+  étapes (Stage 1, 2, 3...) généré par Claude, avec gain attendu et risque fiabilité par pièce.
+  Uniquement des conseils texte, aucune génération d'image IA du véhicule (l'IA ne connaît pas
   l'apparence réelle de votre véhicule — la vue 360° avec vos vraies photos couvre ce besoin).
+- **Budget & Projets** : construisez un projet de préparation ligne par ligne (pièce, catégorie,
+  prix estimé, difficulté), total automatique comparé à un objectif de puissance. Un plan généré
+  par l'assistant peut être converti en projet en un tap.
+- **Timeline de puissance** : progression chronologique de la puissance du véhicule, alimentée
+  par la puissance renseignée sur une entrée du journal et/ou des résultats banc/piste.
+- **Vérificateur de compatibilité** : avis IA sur une combinaison de pièces ou une question libre
+  (type "quelle prépa pour telle voiture avec tel budget ?"). **Ce n'est pas une vérification
+  contre une base de données technique réelle** — l'IA n'a pas accès aux fiches constructeur
+  exactes ni à des retours d'expérience vérifiés. Chaque réponse affiche un avertissement et
+  invite à confirmer auprès d'un professionnel avant tout achat ou montage.
 - Page publique partageable par véhicule + bouton de partage natif.
 - Communauté : fil d'abonnements, découverte de véhicules publics, likes, follow,
   notifications in-app (follow, nouvelle modif, like, commentaire) via triggers SQL.

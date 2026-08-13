@@ -47,6 +47,7 @@ const db: Record<string, any[]> = {
       is_public: true,
       hide_budget: false,
       horsepower: 132,
+      mileage: 168000,
       is_completed: true,
       photos_360_before: rotationFrames("Avant", 8, "151520", "8b8b95"),
       photos_360_after: rotationFrames("Apres", 8, "151520", "8B5CF6"),
@@ -63,6 +64,7 @@ const db: Record<string, any[]> = {
       is_public: true,
       hide_budget: false,
       horsepower: 73,
+      mileage: 8200,
       is_completed: false,
       photos_360_before: rotationFrames("Avant", 6, "151520", "06B6D4"),
       photos_360_after: [],
@@ -79,6 +81,7 @@ const db: Record<string, any[]> = {
       is_public: true,
       hide_budget: false,
       horsepower: 230,
+      mileage: 62000,
       is_completed: false,
       photos_360_before: [],
       photos_360_after: [],
@@ -102,11 +105,23 @@ const db: Record<string, any[]> = {
     },
   ],
   mod_entries: [
-    { id: "e1", vehicle_id: "v1", category: "esthetique", title: "Jantes 18 pouces", description: "Jantes Speedline en remplacement des jantes tôle d'origine.", price: 850, photos: [stockPhoto("mod-jantes-205")], entry_date: dateDaysAgo(280), created_at: daysAgo(280) },
-    { id: "e2", vehicle_id: "v1", category: "performance", title: "Reprogrammation moteur", description: "Passage de 105 à 130ch chez un spécialiste local.", price: 600, photos: [stockPhoto("mod-reprog-205")], entry_date: dateDaysAgo(180), created_at: daysAgo(180) },
-    { id: "e3", vehicle_id: "v1", category: "confort", title: "Sièges baquets", description: "Sièges Recaro d'occasion, montage par un garage.", price: 1200, photos: [stockPhoto("mod-sieges-205")], entry_date: dateDaysAgo(30), created_at: daysAgo(30) },
-    { id: "e4", vehicle_id: "v3", category: "esthetique", title: "Kit carrosserie GTI", description: "Pare-choc, jupes latérales et diffuseur arrière.", price: 950, photos: [stockPhoto("mod-carrosserie-golf")], entry_date: dateDaysAgo(10), created_at: daysAgo(10) },
-    { id: "e5", vehicle_id: "v2", category: "performance", title: "Ligne d'échappement Akrapovic", description: "Son plus profond, gain de quelques chevaux.", price: 780, photos: [stockPhoto("mod-echappement-mt07")], entry_date: dateDaysAgo(20), created_at: daysAgo(20) },
+    { id: "e1", vehicle_id: "v1", category: "esthetique", title: "Jantes 18 pouces", description: "Jantes Speedline en remplacement des jantes tôle d'origine.", price: 850, photos: [stockPhoto("mod-jantes-205")], entry_date: dateDaysAgo(280), resulting_horsepower: null, created_at: daysAgo(280) },
+    { id: "e2", vehicle_id: "v1", category: "performance", title: "Reprogrammation moteur", description: "Passage de 105 à 130ch chez un spécialiste local.", price: 600, photos: [stockPhoto("mod-reprog-205")], entry_date: dateDaysAgo(180), resulting_horsepower: 130, created_at: daysAgo(180) },
+    { id: "e3", vehicle_id: "v1", category: "confort", title: "Sièges baquets", description: "Sièges Recaro d'occasion, montage par un garage.", price: 1200, photos: [stockPhoto("mod-sieges-205")], entry_date: dateDaysAgo(30), resulting_horsepower: null, created_at: daysAgo(30) },
+    { id: "e4", vehicle_id: "v3", category: "esthetique", title: "Kit carrosserie GTI", description: "Pare-choc, jupes latérales et diffuseur arrière.", price: 950, photos: [stockPhoto("mod-carrosserie-golf")], entry_date: dateDaysAgo(10), resulting_horsepower: null, created_at: daysAgo(10) },
+    { id: "e5", vehicle_id: "v2", category: "performance", title: "Ligne d'échappement Akrapovic", description: "Son plus profond, gain de quelques chevaux.", price: 780, photos: [stockPhoto("mod-echappement-mt07")], entry_date: dateDaysAgo(20), resulting_horsepower: null, created_at: daysAgo(20) },
+  ],
+  power_logs: [
+    { id: "pl1", vehicle_id: "v1", recorded_date: dateDaysAgo(300), horsepower: 105, torque_nm: 137, source: "constructeur", track_name: null, lap_time_seconds: null, notes: "Puissance d'origine.", created_at: daysAgo(300) },
+    { id: "pl2", vehicle_id: "v1", recorded_date: dateDaysAgo(170), horsepower: 132, torque_nm: 148, source: "banc", track_name: "Banc Dynojet — Garage Meunier", lap_time_seconds: null, notes: "Vérification après reprogrammation.", created_at: daysAgo(170) },
+  ],
+  build_projects: [
+    { id: "bp1", vehicle_id: "v1", title: "Objectif 160 ch", target_horsepower: 160, status: "in_progress", created_at: daysAgo(20) },
+  ],
+  build_project_items: [
+    { id: "bpi1", project_id: "bp1", label: "Collecteur d'échappement 4-1", category: "performance", estimated_price: 420, difficulty: "moyen", is_done: true, created_at: daysAgo(20) },
+    { id: "bpi2", project_id: "bp1", label: "Filtre à air sport", category: "performance", estimated_price: 90, difficulty: "facile", is_done: true, created_at: daysAgo(20) },
+    { id: "bpi3", project_id: "bp1", label: "Ré-cartographie moteur", category: "performance", estimated_price: 350, difficulty: "difficile", is_done: false, created_at: daysAgo(20) },
   ],
   maintenance_items: [
     { id: "m1", vehicle_id: "v1", kind: "vidange", label: "Vidange + filtre à huile", due_date: daysFromNow(12), due_mileage: null, last_done_date: null, last_done_mileage: null, completed: false, created_at: daysAgo(100) },
@@ -263,29 +278,67 @@ const fakeSession = {
   user: { id: "u1", email: "alex@example.com" },
 } as any;
 
-const mockRecommendations = [
+const mockStages = [
   {
-    title: "Amortisseurs sport réglables",
-    category: "performance",
-    estimated_price: 650,
-    difficulty: "moyen",
-    explanation: "Améliore la tenue de route et abaisse légèrement le centre de gravité pour un comportement plus sportif.",
+    title: "Bases (châssis & freinage)",
+    recommendations: [
+      {
+        title: "Pneus sport (train complet)",
+        category: "performance",
+        estimated_price: 650,
+        difficulty: "facile",
+        explanation: "Le meilleur gain par euro pour la tenue de route et le freinage, avant toute autre modification.",
+        expected_gain: "Adhérence et freinage nettement améliorés",
+        reliability_risk: "Aucun — remplacement standard",
+      },
+      {
+        title: "Amortisseurs sport réglables",
+        category: "performance",
+        estimated_price: 750,
+        difficulty: "moyen",
+        explanation: "Améliore la tenue de route et abaisse légèrement le centre de gravité pour un comportement plus sportif.",
+        expected_gain: "Meilleure stabilité en virage",
+        reliability_risk: "Faible si réglage fait par un professionnel",
+      },
+    ],
   },
   {
-    title: "Échappement inox homologué",
-    category: "performance",
-    estimated_price: 550,
-    difficulty: "facile",
-    explanation: "Gain de quelques chevaux et une sonorité plus présente, pose rapide chez un garage.",
-  },
-  {
-    title: "Volant sport + pommeau de vitesse",
-    category: "esthetique",
-    estimated_price: 220,
-    difficulty: "facile",
-    explanation: "Améliore les sensations de conduite pour un budget limité, montage possible soi-même.",
+    title: "Performance moteur",
+    recommendations: [
+      {
+        title: "Échappement inox homologué",
+        category: "performance",
+        estimated_price: 550,
+        difficulty: "facile",
+        explanation: "Gain de quelques chevaux et une sonorité plus présente, pose rapide chez un garage.",
+        expected_gain: "+8 à 12 ch environ",
+        reliability_risk: "Faible",
+      },
+      {
+        title: "Reprogrammation moteur",
+        category: "performance",
+        estimated_price: 450,
+        difficulty: "moyen",
+        explanation: "Optimise la cartographie d'injection et d'allumage pour plus de couple et de puissance.",
+        expected_gain: "+15 à 25 ch selon le véhicule",
+        reliability_risk: "Modéré si mal réglée — privilégier un spécialiste reconnu",
+      },
+    ],
   },
 ];
+
+const mockCompatibility = {
+  summary:
+    "Avis général basé sur des principes mécaniques connus, pas une vérification garantie : la combinaison " +
+    "décrite est plausible mais nécessite une vérification précise des débits d'injection et du " +
+    "dimensionnement du turbo par un préparateur avant achat.",
+  verdicts: [
+    { part: "Turbo", status: "attention", explanation: "Compatible en général sur ce type de moteur, mais nécessite souvent un support moteur renforcé au-delà d'un certain niveau de boost." },
+    { part: "Injecteurs", status: "compatible", explanation: "Le débit mentionné correspond généralement à la plage utile pour ce niveau de puissance visé." },
+    { part: "Intercooler", status: "compatible", explanation: "Amélioration cohérente avec une hausse de pression turbo, aucun souci d'intégration connu en général." },
+    { part: "Gestion moteur / cartographie", status: "manquant", explanation: "Une reprogrammation adaptée à ces pièces est indispensable pour que l'ensemble fonctionne correctement — non incluse dans la liste fournie." },
+  ],
+};
 
 export const previewSupabase: any = {
   auth: {
@@ -307,9 +360,12 @@ export const previewSupabase: any = {
     },
   },
   functions: {
-    invoke: async (_name: string) => {
+    invoke: async (name: string) => {
       await new Promise((r) => setTimeout(r, 600));
-      return { data: { recommendations: mockRecommendations }, error: null };
+      if (name === "check-compatibility") {
+        return { data: mockCompatibility, error: null };
+      }
+      return { data: { stages: mockStages }, error: null };
     },
   },
 };

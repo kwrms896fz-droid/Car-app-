@@ -21,6 +21,9 @@ export default function GarageLayout() {
         options={{ headerShown: false, presentation: "modal" }}
       />
       <Stack.Screen name="[id]/360" options={{ headerShown: false }} />
+      <Stack.Screen name="[id]/budget/index" options={{ headerShown: false }} />
+      <Stack.Screen name="[id]/budget/[projectId]" options={{ headerShown: false }} />
+      <Stack.Screen name="[id]/compatibility" options={{ headerShown: false, presentation: "modal" }} />
     </Stack>
   );
 }
