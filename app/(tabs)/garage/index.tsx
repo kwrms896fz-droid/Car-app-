@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
+import { HeaderAddButton } from "@/components/HeaderAddButton";
 import { Screen } from "@/components/Screen";
 import { VehicleCard } from "@/components/VehicleCard";
 import { useAuth } from "@/context/AuthContext";
@@ -51,16 +52,9 @@ export default function GarageScreen() {
     <Screen>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Mon garage</Text>
-        <Pressable
-          onPress={() =>
-            canAddVehicle
-              ? router.push("/(tabs)/garage/new")
-              : router.push("/(tabs)/profile")
-          }
-          style={styles.addButton}
-        >
-          <Ionicons name="add" size={26} color={colors.onNeon} />
-        </Pressable>
+        <HeaderAddButton
+          onPress={() => (canAddVehicle ? router.push("/(tabs)/garage/new") : router.push("/(tabs)/profile"))}
+        />
       </View>
 
       {!canAddVehicle ? (
@@ -105,14 +99,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "800",
     color: colors.text,
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
   },
   limitNotice: {
     color: colors.textMuted,

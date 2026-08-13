@@ -14,7 +14,7 @@ export default function GarageLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="new" options={{ title: "Nouveau véhicule", presentation: "modal" }} />
-      <Stack.Screen name="[id]/index" options={{ title: "" }} />
+      <Stack.Screen name="[id]/index" options={{ title: "", animation: "fade_from_bottom" }} />
       <Stack.Screen name="[id]/add-entry" options={{ title: "Ajouter une modif", presentation: "modal" }} />
       <Stack.Screen
         name="[id]/recommendations"

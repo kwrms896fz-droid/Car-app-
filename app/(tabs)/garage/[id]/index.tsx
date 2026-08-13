@@ -2,8 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useFocusEffect, useLocalSearchParams, useNavigation } from "expo-router";
 import { useCallback, useLayoutEffect, useState } from "react";
-import { FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
+import { FlatList, Share, StyleSheet, Text, View } from "react-native";
 
+import { ActionRow } from "@/components/ActionRow";
 import { GlassCard } from "@/components/GlassCard";
 import { Screen } from "@/components/Screen";
 import { ModEntryCard } from "@/components/ModEntryCard";
@@ -81,28 +82,31 @@ export default function VehicleDetailScreen() {
           </GlassCard>
         ) : null}
 
-        <View style={styles.actionsRow}>
+        <View style={styles.actionsList}>
           {isOwner ? (
-            <ActionButton
+            <ActionRow
               icon="add-circle"
               accent={colors.pink}
-              label="Ajouter une modif"
+              label="Ajouter une modification"
+              subtitle="Nouvelle entrée dans le journal"
               onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/add-entry`)}
             />
           ) : null}
-          <ActionButton
+          <ActionRow
             icon="sparkles"
             accent={colors.primary}
-            label="Recommandations IA"
+            label="Recommandation IA"
+            subtitle="Visualisez le résultat avant de vous lancer"
             onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/recommendations`)}
           />
-          <ActionButton
+          <ActionRow
             icon="sync"
             accent={colors.cyan}
             label="Vue 360°"
+            subtitle="Avant / après préparation"
             onPress={() => router.push(`/(tabs)/garage/${vehicle!.id}/360`)}
           />
-          <ActionButton icon="share-social" accent={colors.text} label="Partager" onPress={onShare} />
+          <ActionRow icon="share-social" accent={colors.text} label="Partager" subtitle="Lien public de la fiche" onPress={onShare} />
         </View>
 
         <Text style={styles.sectionTitle}>Historique des modifications</Text>
@@ -123,25 +127,6 @@ export default function VehicleDetailScreen() {
         />
       </View>
     </Screen>
-  );
-}
-
-function ActionButton({
-  icon,
-  label,
-  accent = colors.primary,
-  onPress,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  label: string;
-  accent?: string;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable onPress={onPress} style={[styles.actionButton, { borderColor: `${accent}40` }]}>
-      <Ionicons name={icon} size={20} color={accent} />
-      <Text style={styles.actionLabel}>{label}</Text>
-    </Pressable>
   );
 }
 
@@ -172,26 +157,8 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginTop: 2,
   },
-  actionsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+  actionsList: {
     gap: spacing.sm,
-  },
-  actionButton: {
-    flexBasis: "47%",
-    flexGrow: 1,
-    alignItems: "center",
-    gap: 4,
-    backgroundColor: "rgba(255,255,255,0.05)",
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    borderWidth: 1.5,
-  },
-  actionLabel: {
-    color: colors.text,
-    fontSize: 11,
-    fontWeight: "700",
-    textAlign: "center",
   },
   sectionTitle: {
     color: colors.text,

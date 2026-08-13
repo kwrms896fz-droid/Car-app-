@@ -307,7 +307,11 @@ export const previewSupabase: any = {
     },
   },
   functions: {
-    invoke: async (_name: string) => {
+    invoke: async (name: string) => {
+      if (name === "visualize-mods") {
+        await new Promise((r) => setTimeout(r, 1400));
+        return { data: { imageUrl: stockPhoto("los-santos-customs-concept", 1024, 683) }, error: null };
+      }
       await new Promise((r) => setTimeout(r, 600));
       return { data: { recommendations: mockRecommendations }, error: null };
     },

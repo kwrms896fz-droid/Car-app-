@@ -76,6 +76,25 @@ La fonction (`supabase/functions/ai-recommendations`) vérifie que l'utilisateur
 propriétaire du véhicule, appelle l'API Claude côté serveur (la clé API n'est jamais
 exposée au client) et renvoie une liste structurée de recommandations en JSON.
 
+### 3bis. (Optionnel) Déployer la génération d'aperçu visuel IA
+
+L'écran « Recommandation IA » propose aussi un aperçu photoréaliste du véhicule
+avec les modifications décrites. Cette partie appelle un fournisseur externe de
+génération d'image (image-to-image) — non inclus par défaut. Le scaffold cible
+[Replicate](https://replicate.com) mais n'importe quel fournisseur exposant un
+endpoint de prédiction équivalent peut être branché dans
+`supabase/functions/visualize-mods/index.ts`.
+
+```bash
+npx supabase secrets set REPLICATE_API_TOKEN=r8_...
+npx supabase secrets set REPLICATE_MODEL_VERSION=<version-id d'un modèle image-to-image>
+npx supabase functions deploy visualize-mods
+```
+
+Sans ces secrets, la fonction répond une erreur explicite (501) plutôt que de
+planter silencieusement. En mode démo (`EXPO_PUBLIC_PREVIEW=1`), un aperçu
+factice est renvoyé automatiquement pour tester le flux sans clé API.
+
 ### 4. Lancer l'app
 
 ```bash
@@ -95,6 +114,7 @@ lib/                       Client Supabase, requêtes, thème
 supabase/
   migrations/0001_init.sql Schéma complet (tables, RLS, triggers, storage)
   functions/ai-recommendations/  Edge Function appelant l'API Claude
+  functions/visualize-mods/      Edge Function de génération d'aperçu visuel (image-to-image)
 ```
 
 ## Ce qui est fonctionnel dans ce scaffold
@@ -106,7 +126,9 @@ supabase/
 - Vue 360° : séquence de photos "avant préparation" et "après préparation"
   (une fois marquée comme terminée), visualiseur en glisser-tourner, résumé
   (modèle, année, puissance) et partage. Voir « Limites actuelles » ci-dessous.
-- Recommandations IA (formulaire objectif + budget → appel Edge Function → Claude).
+- Recommandations IA (formulaire objectif + budget → appel Edge Function → Claude), avec
+  en complément un aperçu visuel photoréaliste des modifications décrites (nécessite la
+  configuration optionnelle décrite en section 3bis — sinon message d'erreur explicite).
 - Page publique partageable par véhicule + bouton de partage natif.
 - Communauté : fil d'abonnements, découverte de véhicules publics, likes, follow,
   notifications in-app (follow, nouvelle modif, like, commentaire) via triggers SQL.

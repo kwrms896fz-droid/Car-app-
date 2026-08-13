@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
+import { HeaderAddButton } from "@/components/HeaderAddButton";
 import { MaintenanceItemCard } from "@/components/MaintenanceItemCard";
 import { Screen } from "@/components/Screen";
 import { useAuth } from "@/context/AuthContext";
@@ -40,12 +41,11 @@ export default function MaintenanceScreen() {
     <Screen>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Entretien</Text>
-        <Pressable
-          onPress={() => (vehicles.length > 0 ? router.push("/(tabs)/maintenance/new") : router.push("/(tabs)/garage/new"))}
-          style={styles.addButton}
-        >
-          <Ionicons name="add" size={26} color={colors.onNeon} />
-        </Pressable>
+        <HeaderAddButton
+          onPress={() =>
+            vehicles.length > 0 ? router.push("/(tabs)/maintenance/new") : router.push("/(tabs)/garage/new")
+          }
+        />
       </View>
 
       {!profile?.is_premium ? (
@@ -90,14 +90,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "800",
     color: colors.text,
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
   },
   limitNotice: {
     color: colors.textMuted,

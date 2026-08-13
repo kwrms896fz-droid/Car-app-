@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
@@ -8,7 +9,7 @@ import { Screen } from "@/components/Screen";
 import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, glow, gradients, radius, spacing } from "@/lib/theme";
 
 export default function ProfileScreen() {
   const { session, profile, refreshProfile, signOut } = useAuth();
@@ -39,27 +40,38 @@ export default function ProfileScreen() {
 
   return (
     <Screen scroll>
+      <Text style={styles.title}>Profil</Text>
+
       <View style={styles.avatarRow}>
-        <View style={styles.avatar}>
-          <Ionicons name="person" size={32} color={colors.textMuted} />
+        <View style={[styles.avatarRing, glow(colors.primary, 0.4, 14)]}>
+          <View style={styles.avatar}>
+            <Ionicons name="person" size={30} color={colors.textMuted} />
+          </View>
         </View>
         <View>
           <Text style={styles.username}>@{profile?.username}</Text>
-          <Text style={styles.plan}>{profile?.is_premium ? "Abonné" : "Compte gratuit"}</Text>
+          <View style={styles.planPill}>
+            <View style={[styles.planDot, profile?.is_premium && styles.planDotActive]} />
+            <Text style={styles.plan}>{profile?.is_premium ? "Abonné" : "Compte gratuit"}</Text>
+          </View>
         </View>
       </View>
 
-      <Pressable onPress={() => router.push("/(tabs)/profile/paywall")} style={styles.upsell}>
-        <Ionicons name="sparkles" size={20} color={colors.primary} />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.upsellTitle}>
-            {profile?.is_premium ? "Gérer mon abonnement" : "Passer à l'abonnement"}
-          </Text>
-          <Text style={styles.upsellSubtitle}>
-            Véhicules illimités, entretien, IA et communauté sans limite.
-          </Text>
-        </View>
-        <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+      <Pressable onPress={() => router.push("/(tabs)/profile/paywall")} style={({ pressed }) => pressed && styles.pressed}>
+        <LinearGradient colors={gradients.cardGlow} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.upsell}>
+          <View style={styles.upsellIcon}>
+            <Ionicons name="sparkles" size={20} color={colors.primary} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.upsellTitle}>
+              {profile?.is_premium ? "Gérer mon abonnement" : "Passer à l'abonnement"}
+            </Text>
+            <Text style={styles.upsellSubtitle}>
+              Véhicules illimités, entretien, IA et communauté sans limite.
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+        </LinearGradient>
       </Pressable>
 
       <TextField label="Nom affiché" value={displayName} onChangeText={setDisplayName} />
@@ -79,15 +91,32 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: colors.text,
+  },
+  pressed: {
+    opacity: 0.9,
+  },
   avatarRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
   },
+  avatarRing: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1.5,
+    borderColor: colors.primarySoft,
+  },
   avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: colors.surfaceAlt,
     alignItems: "center",
     justifyContent: "center",
@@ -97,26 +126,51 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "800",
   },
+  planPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 4,
+  },
+  planDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.textDim,
+  },
+  planDotActive: {
+    backgroundColor: colors.success,
+  },
   plan: {
     color: colors.textMuted,
     fontSize: 13,
+    fontWeight: "600",
   },
   upsell: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
-    backgroundColor: colors.primarySoft,
     borderWidth: 1,
     borderColor: `${colors.primary}55`,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: spacing.md,
+  },
+  upsellIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.primarySoft,
+    alignItems: "center",
+    justifyContent: "center",
   },
   upsellTitle: {
     color: colors.text,
     fontWeight: "700",
+    fontSize: 15,
   },
   upsellSubtitle: {
     color: colors.textMuted,
     fontSize: 12,
+    marginTop: 1,
   },
 });

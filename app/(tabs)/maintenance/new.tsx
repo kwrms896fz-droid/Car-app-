@@ -8,7 +8,7 @@ import { TextField } from "@/components/TextField";
 import { useAuth } from "@/context/AuthContext";
 import type { MaintenanceKind, Vehicle } from "@/lib/database.types";
 import { createMaintenanceItem } from "@/lib/maintenance";
-import { colors, maintenanceLabels, radius, spacing } from "@/lib/theme";
+import { colors, glow, maintenanceLabels, radius, spacing } from "@/lib/theme";
 import { fetchMyVehicles } from "@/lib/vehicles";
 
 const kinds = Object.keys(maintenanceLabels) as MaintenanceKind[];
@@ -64,7 +64,7 @@ export default function NewMaintenanceScreen() {
           <Pressable
             key={v.id}
             onPress={() => setVehicleId(v.id)}
-            style={[styles.chip, vehicleId === v.id && styles.chipActive]}
+            style={[styles.chip, vehicleId === v.id && [styles.chipActive, glow(colors.primary, 0.4, 10)]]}
           >
             <Text style={[styles.chipText, vehicleId === v.id && styles.chipTextActive]}>
               {v.brand} {v.model}
@@ -76,7 +76,11 @@ export default function NewMaintenanceScreen() {
       <Text style={styles.sectionLabel}>Type d'entretien</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
         {kinds.map((k) => (
-          <Pressable key={k} onPress={() => setKind(k)} style={[styles.chip, kind === k && styles.chipActive]}>
+          <Pressable
+            key={k}
+            onPress={() => setKind(k)}
+            style={[styles.chip, kind === k && [styles.chipActive, glow(colors.primary, 0.4, 10)]]}
+          >
             <Text style={[styles.chipText, kind === k && styles.chipTextActive]}>{maintenanceLabels[k]}</Text>
           </Pressable>
         ))}
