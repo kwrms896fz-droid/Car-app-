@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build:web",
+  "buildCommand": "EXPO_PUBLIC_PREVIEW=1 npm run build:web",
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
