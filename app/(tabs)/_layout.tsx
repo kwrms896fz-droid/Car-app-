@@ -35,7 +35,9 @@ export default function TabsLayout() {
         ),
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textDim,
-        tabBarLabelStyle: { fontWeight: "700", fontSize: 11 },
+        tabBarLabelStyle: { fontWeight: "700", fontSize: 10, letterSpacing: -0.2 },
+        tabBarItemStyle: { paddingHorizontal: 0 },
+        tabBarIconStyle: { marginBottom: -2 },
       }}
     >
       <Tabs.Screen
@@ -58,6 +60,7 @@ export default function TabsLayout() {
           title: "Partager",
           tabBarLabel: () => null,
           tabBarButton: (props) => <CenterTabButton {...props} />,
+          tabBarItemStyle: { flex: 0.6, paddingHorizontal: 0 },
         }}
       />
       <Tabs.Screen
