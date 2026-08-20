@@ -1,180 +1,127 @@
-# Carnet Garage
+# Visibl — SaaS de visibilité IA
 
-App mobile (React Native + Expo) pour documenter, suivre et partager les modifications
-esthétiques et mécaniques de sa voiture ou sa moto, avec des recommandations IA et un
-suivi d'entretien classique. Basée sur le cahier des charges fourni — voir `AGENTS.md`
-pour les notes spécifiques à la version d'Expo utilisée.
+Application web (Next.js 16 + Tailwind CSS 4) qui teste si une entreprise est
+citée par **ChatGPT**, **Perplexity** et **Gemini** quand on pose les questions
+que ses clients posent vraiment, puis délivre des recommandations priorisées.
 
-> « Carnet Garage » est un nom provisoire — changez `name`/`slug` dans `app.json` et
-> `name` dans `package.json` à volonté.
+> Première étape du produit : les réponses des IA sont **simulées**. Aucune
+> requête n'est envoyée à OpenAI, Perplexity ou Google. Le code est structuré
+> pour brancher les vraies API sans toucher à l'interface (voir plus bas).
 
-## Stack
+## Démarrer
 
-| Besoin | Outil |
+```bash
+npm install
+npm run dev
+```
+
+L'application est disponible sur http://localhost:3000.
+
+| Commande | Effet |
 |---|---|
-| App iOS + Android + Web | Expo Router (React Native) |
-| Backend / base de données | Supabase (PostgreSQL, Auth, Storage) |
-| IA recommandations | API Anthropic (Claude), via une Edge Function Supabase |
-| Abonnements | RevenueCat (non connecté dans ce scaffold, voir plus bas) |
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run start` | Sert le build de production |
+| `npm run typecheck` | Vérification TypeScript |
 
-## Tester rapidement sans backend (mode démo)
+## Ce que contient cette étape
 
-Pour voir l'app tourner sur votre téléphone en quelques minutes, sans créer de
-projet Supabase :
+1. **Landing page** (`/`) — explication du concept, problème adressé,
+   fonctionnement en 4 étapes, critères analysés, et le bouton
+   « Tester mon site gratuitement ».
+2. **Formulaire** — URL du site, secteur d'activité, ville. Validation côté
+   client, redirection vers la page de résultats.
+3. **Page de résultats** (`/results?url=…&sector=…&city=…`) — score global,
+   puis pour chaque IA : badge **Cité** / **Non cité**, score de visibilité
+   sur 100, détail des questions posées et 2 à 3 recommandations priorisées.
+4. **Route API** (`POST /api/analyze`) — même rapport au format JSON, pour un
+   futur widget, une extension ou un tableau de bord client.
 
-```bash
-npm install
-cp .env.example .env
-```
+Les résultats sont **déterministes** : un même site, secteur et ville
+produisent toujours le même rapport (utile pour les démos et les captures).
 
-Puis décommentez `EXPO_PUBLIC_PREVIEW=1` dans `.env`, et lancez :
-
-```bash
-npx expo start
-```
-
-Scannez le QR code affiché avec l'app **Expo Go** (iOS/Android, gratuite) — le
-téléphone et l'ordinateur doivent être sur le même réseau Wi-Fi. L'app se lance
-avec un compte et des données factices déjà chargés (véhicules, modifications,
-entretien, communauté) : aucune connexion n'est nécessaire, rien n'est
-sauvegardé. Pratique pour explorer l'app ou faire des captures d'écran.
-
-Pour passer au vrai backend ensuite, il suffit de retirer/commenter
-`EXPO_PUBLIC_PREVIEW` et de suivre la section suivante.
-
-## Démarrage (avec un vrai backend Supabase)
-
-### 1. Dépendances
-
-```bash
-npm install
-```
-
-### 2. Créer un projet Supabase
-
-1. Créez un projet sur [supabase.com](https://supabase.com).
-2. Exécutez les migrations SQL (voir étape 3 ci-dessous).
-3. Copiez `.env.example` vers `.env` et renseignez :
-   - `EXPO_PUBLIC_SUPABASE_URL`
-   - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-   - `EXPO_PUBLIC_WEB_URL` (une fois la version web déployée — sert à générer les
-     liens publics partageables des véhicules)
-4. Dans **Authentication > Providers**, activez Email (et Google/Apple si besoin —
-   non câblés dans ce scaffold, à ajouter via `expo-auth-session`).
-
-### 3. Exécuter les migrations SQL
-
-Exécutez `supabase/migrations/0001_init.sql` **puis** `supabase/migrations/0002_build_planner.sql`
-(dans cet ordre) via l'éditeur SQL Supabase ou `supabase db push`. Le second fichier
-ajoute les tables du planificateur de préparation (timeline de puissance, projets budget).
-
-### 4. Déployer les fonctions IA
-
-```bash
-npx supabase login
-npx supabase link --project-ref <votre-ref-projet>
-npx supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-npx supabase functions deploy ai-recommendations
-npx supabase functions deploy check-compatibility
-```
-
-Les deux fonctions vérifient que l'utilisateur est propriétaire du véhicule et appellent
-l'API Claude côté serveur (la clé API n'est jamais exposée au client) :
-- `ai-recommendations` : génère un plan de préparation par étapes (JSON structuré).
-- `check-compatibility` : avis de compatibilité de pièces / question libre (JSON structuré).
-
-### 5. Lancer l'app
-
-```bash
-npm run start   # puis 'i' (iOS), 'a' (Android) ou 'w' (web)
-```
-
-## Structure du projet
+## Architecture
 
 ```
-app/                      Écrans (Expo Router — routage par fichiers)
-  (auth)/                 Connexion / inscription
-  (tabs)/                 Garage, Communauté, Entretien, Profil
-  vehicle/[id].tsx         Page publique partageable d'un véhicule
-components/                Composants UI réutilisables
-context/AuthContext.tsx    Session Supabase + profil utilisateur
-lib/                       Client Supabase, requêtes, thème
-supabase/
-  migrations/0001_init.sql          Schéma initial (tables, RLS, triggers, storage)
-  migrations/0002_build_planner.sql Timeline de puissance, projets budget
-  functions/ai-recommendations/     Edge Function : plan de préparation par étapes
-  functions/check-compatibility/    Edge Function : avis de compatibilité pièces / question libre
+.
+├── app/
+│   ├── page.tsx                 Landing page
+│   ├── results/page.tsx         Rapport (composant serveur, appelle runAudit)
+│   ├── results/loading.tsx      Écran de scan pendant l'analyse
+│   └── api/analyze/route.ts     POST /api/analyze
+├── components/                  UI (formulaire, cartes, jauge, badges)
+└── lib/
+    ├── types.ts                 Types partagés, sans dépendance framework
+    ├── providers/               ← LA COUCHE À BRANCHER
+    │   ├── types.ts             Interface AiProvider
+    │   ├── mock-engine.ts       Générateur de réponses factices
+    │   ├── chatgpt.ts           Adaptateur OpenAI
+    │   ├── perplexity.ts        Adaptateur Perplexity
+    │   ├── gemini.ts            Adaptateur Google
+    │   └── index.ts             Registre + poids dans le score global
+    └── audit/
+        ├── sectors.ts           Secteurs + gabarits de questions
+        ├── questions.ts         Construction des prompts
+        ├── brand.ts             URL → marque (nom, domaine)
+        ├── scoring.ts           Détection de citation + calcul des scores
+        ├── recommendations.ts   Moteur de règles → conseils
+        └── run-audit.ts         Orchestration : entrée → rapport
 ```
 
-## Ce qui est fonctionnel dans ce scaffold
+Le flux est linéaire et testable étape par étape :
 
-- Inscription / connexion email + mot de passe, profil auto-créé (trigger SQL).
-- Garage : création de véhicule (voiture/moto), photo de couverture, journal de
-  modifications avec 3 catégories (esthétique / performance / confort), prix et
-  calcul automatique du budget total.
-- Vue 360° : séquence de photos "avant préparation" et "après préparation"
-  (une fois marquée comme terminée), visualiseur en glisser-tourner, résumé
-  (modèle, année, puissance) et partage. Voir « Limites actuelles » ci-dessous.
-- **Assistant de préparation** : objectif libre (puissance visée, temps au tour, look...),
-  usage (daily/piste/drift/show/rallye) et préférence de fiabilité → plan de préparation par
-  étapes (Stage 1, 2, 3...) généré par Claude, avec gain attendu et risque fiabilité par pièce.
-  Uniquement des conseils texte, aucune génération d'image IA du véhicule (l'IA ne connaît pas
-  l'apparence réelle de votre véhicule — la vue 360° avec vos vraies photos couvre ce besoin).
-- **Budget & Projets** : construisez un projet de préparation ligne par ligne (pièce, catégorie,
-  prix estimé, difficulté), total automatique comparé à un objectif de puissance. Un plan généré
-  par l'assistant peut être converti en projet en un tap.
-- **Timeline de puissance** : progression chronologique de la puissance du véhicule, alimentée
-  par la puissance renseignée sur une entrée du journal et/ou des résultats banc/piste.
-- **Vérificateur de compatibilité** : avis IA sur une combinaison de pièces ou une question libre
-  (type "quelle prépa pour telle voiture avec tel budget ?"). **Ce n'est pas une vérification
-  contre une base de données technique réelle** — l'IA n'a pas accès aux fiches constructeur
-  exactes ni à des retours d'expérience vérifiés. Chaque réponse affiche un avertissement et
-  invite à confirmer auprès d'un professionnel avant tout achat ou montage.
-- Page publique partageable par véhicule + bouton de partage natif.
-- Communauté : fil d'abonnements, découverte de véhicules publics, likes, follow,
-  notifications in-app (follow, nouvelle modif, like, commentaire) via triggers SQL.
-- Entretien : ajout d'échéances (vidange, pneus, contrôle technique, freins...),
-  indicateur en retard / bientôt / à jour, marquage comme fait.
-- Profil + écran d'abonnement (maquette, sans paiement réel branché).
+```
+AuditInput → buildQuestions → provider.ask() → AiAnswer
+          → analyzeAnswer → Probe → scoreProvider → buildRecommendations
+          → AuditReport → UI
+```
 
-## Limites actuelles de la vue 360°
+## Brancher les vraies API
 
-- La "rotation" est une séquence de photos que vous prenez vous-même autour du
-  véhicule (l'app ne pilote pas l'appareil photo automatiquement) : ouvrez
-  l'écran, sélectionnez plusieurs photos dans l'ordre de la rotation (8 à 10
-  photos réparties tout autour du véhicule donnent le meilleur rendu), glissez
-  pour prévisualiser.
-- Le partage envoie l'image de la frame actuelle + un texte récapitulatif via
-  le partage natif du téléphone — pas de génération vidéo automatique de la
-  rotation (nécessiterait un rendu vidéo côté serveur, hors scope de ce
-  scaffold).
+Un seul point d'extension : la méthode `ask()` de chaque fournisseur.
+Tout le reste — détection de citation, scoring, recommandations, interface —
+travaille sur des types neutres et n'a pas à changer.
 
-## Ce qui reste à faire pour une V1 complète
+1. Copier `.env.example` vers `.env.local`, renseigner les clés et passer
+   `AI_VISIBILITY_MODE=live`.
+2. Dans `lib/providers/chatgpt.ts`, `perplexity.ts` et `gemini.ts`, remplacer
+   le corps de `askLive()` par l'appel réseau. Chaque fichier contient en
+   en-tête l'endpoint, le format de requête et le mapping vers `AiAnswer`.
+3. C'est tout. Un fournisseur sans clé retombe automatiquement sur le mock,
+   ce qui permet de basculer les trois IA une par une.
 
-- **RevenueCat** : le paiement n'est pas connecté. `profiles.is_premium` et
-  `subscriptions.is_active` existent en base mais doivent être mis à jour par un
-  webhook RevenueCat → une Edge Function Supabase (avec la clé `service_role`).
-- **Connexion Google / Apple** : prévu par le cahier des charges, non implémenté ici
-  (nécessite `expo-auth-session` + configuration des identifiants OAuth).
-- **Notifications push** : les rappels d'entretien sont pour l'instant affichés dans
-  l'app (badges « en retard » / « bientôt ») mais aucune notification push n'est
-  envoyée. Ajouter `expo-notifications` + un job planifié (Supabase Cron / Edge
-  Function) qui compare les échéances à la date du jour.
-- **Commentaires** : la table `comments` et les policies existent, l'UI n'est pas
-  encore branchée (mentionnée dans les notifications sociales du cahier des charges).
-- **Icônes et assets** : `assets/icon.png`, `assets/favicon.png`, etc. sont les
-  placeholders générés par défaut — à remplacer avant publication.
-- **Page publique web** : la route `/vehicle/[id]` fonctionne aussi en web
-  (`npm run web` / `expo export -p web`) mais nécessite un déploiement (Vercel,
-  Cloudflare Pages, etc.) pour obtenir une vraie URL publique à mettre dans
-  `EXPO_PUBLIC_WEB_URL`.
+Points à traiter au moment du passage en production :
 
-## Notes
+- **Recherche web obligatoire** : sans outil de recherche (`web_search` pour
+  OpenAI, `google_search` pour Gemini), les modèles ne peuvent pas citer de
+  commerces locaux. Perplexity le fait nativement.
+- **Rate limiting** : `run-audit.ts` lance aujourd'hui les 4 questions d'un
+  fournisseur en parallèle. Avec de vraies API, limiter la concurrence.
+- **Cache** : un audit coûte 12 appels. Mettre en cache par
+  (domaine, secteur, ville) sur 24 h avant d'ouvrir le service au public.
+- **Nom de la marque** : `buildBrand()` le devine depuis le domaine. En
+  production, le lire dans le `<title>` ou le JSON-LD `Organization` de la
+  page d'accueil.
 
-- Le modèle Claude utilisé par défaut dans la fonction de recommandations est
-  `claude-opus-5`. Pour un cas d'usage aussi léger, `claude-sonnet-5` ou
-  `claude-haiku-4-5` réduiraient sensiblement les coûts — à ajuster dans
-  `supabase/functions/ai-recommendations/index.ts`.
-- Le typage `lib/database.types.ts` est écrit à la main (reflète le schéma SQL). Une
-  fois le projet Supabase créé, vous pouvez le régénérer avec
-  `npx supabase gen types typescript --project-id <ref> > lib/database.types.ts`.
+## Ajouter un secteur ou une IA
+
+- **Un secteur** : ajouter une entrée dans `lib/audit/sectors.ts` (libellé,
+  gabarits de questions, concurrents d'exemple). Le formulaire et les prompts
+  se mettent à jour seuls.
+- **Une IA** (Claude, Copilot, Grok…) : créer un fichier sur le modèle de
+  `lib/providers/chatgpt.ts`, l'ajouter à `PROVIDERS` et lui donner un poids
+  dans `PROVIDER_WEIGHTS`. La landing page et le rapport s'adaptent.
+
+## Calcul du score
+
+Score par IA, sur 100 :
+
+| Signal | Poids | Pourquoi |
+|---|---|---|
+| Taux de citation | 60 pts | Être nommé est la condition d'entrée |
+| Position dans la réponse | 25 pts | Ouvrir la liste n'a pas la valeur d'une 5ᵉ place |
+| Lien vers le site | 15 pts | Une mention sans lien n'apporte aucun trafic |
+
+Le score global est la moyenne pondérée des trois IA (`PROVIDER_WEIGHTS`) :
+Perplexity et Gemini pèsent plus lourd, car ils sont adossés au web en temps
+réel là où ChatGPT dépend davantage de ses données d'entraînement.
